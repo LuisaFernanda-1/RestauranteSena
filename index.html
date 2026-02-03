@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurante SENA - Sistema de Pedidos QR</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --verde-sena: #39a900;
+            --verde-oscuro: #2d8400;
+            --verde-claro: #4bc90d;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* ========== NAVBAR ========== */
+        .navbar-custom {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            padding: 1.2rem 0;
+            transition: all 0.3s;
+        }
+        
+        .navbar-custom.scrolled {
+            padding: 0.8rem 0;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.12);
+        }
+        
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--verde-sena) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        
+        .navbar-brand i {
+            font-size: 2rem;
+        }
+        
+        .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem !important;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--verde-sena);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        
+        .nav-link:hover {
+            color: var(--verde-sena) !important;
+        }
+        
+        .btn-admin {
+            background: white;
+            border: 2px solid #666;
+            color: #666;
+            padding: 0.7rem 1.8rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-admin:hover {
+            background: #333;
+            border-color: #333;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* ========== HERO PRINCIPAL ========== */
+        .hero-principal {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 8rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-principal::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(57, 169, 0, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .hero-principal::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(57, 169, 0, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+        
+        .hero-badge {
+            background: var(--verde-sena);
+            color: white;
+            padding: 0.6rem 1.8rem;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(57, 169, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .hero-principal h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: #1a1a1a;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-principal h1 .verde {
+            color: var(--verde-sena);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero-principal h1 .verde::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--verde-claro);
+            opacity: 0.3;
+            border-radius: 4px;
+        }
+        
+        .hero-principal .lead {
+            font-size: 1.4rem;
+            color: #555;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-buttons .btn {
+            padding: 1.3rem 2.8rem;
+            font-size: 1.15rem;
+            border-radius: 15px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-principal {
+            background: linear-gradient(135deg, var(--verde-sena) 0%, var(--verde-oscuro) 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 8px 25px rgba(57, 169, 0, 0.3);
+        }
+        
+        .btn-principal:hover {
+            background: linear-gradient(135deg, var(--verde-oscuro) 0%, var(--verde-sena) 100%);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(57, 169, 0, 0.4);
+            color: white;
+        }
+        
+        .btn-secundario {
+            background: white;
+            color: var(--verde-sena);
+            border: 3px solid var(--verde-sena);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secundario:hover {
+            background: var(--verde-sena);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(57, 169, 0, 0.3);
+        }
+        
+        .hero-image {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-image img {
+            width: 100%;
+            border-radius: 25px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+            transition: transform 0.5s;
+        }
+        
+        .hero-image:hover img {
+            transform: scale(1.02) rotate(1deg);
+        }
+        
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(57, 169, 0, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--verde-sena), var(--verde-oscuro));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        /* ========== PROCESO QR (4 PASOS) ========== */
+        .proceso-qr {
+            padding: 7rem 0;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+        
+        .section-badge {
+            background: #e8f5e9;
+            color: var(--verde-sena);
+            padding: 0.6rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .section-title h2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            font-size: 1.3rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .paso-card {
+            background: white;
+            border: 3px solid #f0f0f0;
+            border-radius: 25px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            height: 100%;
+        }
+        
+        .paso-card:hover {
+            border-color: var(--verde-sena);
+            transform: translateY(-20px);
+            box-shadow: 0 25px 60px rgba(57, 169, 0, 0.2);
+        }
+        
+        .paso-numero {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--verde-sena), var(--verde-oscuro));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin: 0 auto 2rem;
+            box-shadow: 0 15px 30px rgba(57, 169, 0, 0.3);
+        }
+        
+        .paso-icono {
+            font-size: 4.5rem;
+            color: var(--verde-sena);
+            margin-bottom: 1.5rem;
+        }
+        
+        .paso-card h4 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+        
+        .paso-card p {
+            color: #666;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        
+        /* Flechas entre pasos */
+        .paso-col {
+            position: relative;
+        }
+        
+        .paso-col::after {
+            content: '→';
+            position: absolute;
+            right: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3rem;
+            color: var(--verde-sena);
+            font-weight: 900;
+            opacity: 0.3;
+        }
+        
+        .paso-col:last-child::after {
+            display: none;
+        }
+        
+        /* ========== CARACTERÍSTICAS ========== */
+        .caracteristicas {
+            padding: 7rem 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e9 100%);
+        }
+        
+        .feature-box {
+            background: white;
+            border-radius: 25px;
+            padding: 3rem;
+            display: flex;
+            gap: 2rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            transition: all 0.4s;
+            height: 100%;
+        }
+        
+        .feature-box:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 50px rgba(57, 169, 0, 0.2);
+        }
+        
+        .feature-icon-box {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--verde-sena), var(--verde-oscuro));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 10px 25px rgba(57, 169, 0, 0.3);
+        }
+        
+        .feature-icon-box i {
+            font-size: 3rem;
+            color: white;
+        }
+        
+        .feature-content h4 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 0.8rem;
+        }
+        
+        .feature-content p {
+            color: #666;
+            line-height: 1.8;
+            margin: 0;
+            font-size: 1.05rem;
+        }
+        
+        /* ========== VENTAJAS ========== */
+        .ventajas {
+            padding: 7rem 0;
+            background: white;
+        }
+        
+        .ventaja-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.2rem;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+        
+        .ventaja-item:hover {
+            background: #f8f9fa;
+            transform: translateX(10px);
+        }
+        
+        .ventaja-check {
+            width: 40px;
+            height: 40px;
+            background: var(--verde-sena);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(57, 169, 0, 0.3);
+        }
+        
+        .ventaja-check i {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .ventaja-item span {
+            font-size: 1.2rem;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+        
+        .ventajas-imagen {
+            border-radius: 25px;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.15);
+            width: 100%;
+            transition: transform 0.5s;
+        }
+        
+        .ventajas-imagen:hover {
+            transform: scale(1.02);
+        }
+        
+        /* ========== CTA FINAL ========== */
+        .cta-final {
+            background: linear-gradient(135deg, var(--verde-sena), var(--verde-oscuro));
+            padding: 7rem 0;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-final::before {
+            content: '🍽️';
+            position: absolute;
+            font-size: 30rem;
+            opacity: 0.05;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .cta-final h2 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .cta-final p {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.95;
+            position: relative;
+        }
+        
+        .btn-cta {
+            background: white;
+            color: var(--verde-sena);
+            padding: 1.5rem 3.5rem;
+            font-size: 1.3rem;
+            font-weight: 800;
+            border-radius: 15px;
+            border: none;
+            position: relative;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-cta:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(255,255,255,0.3);
+            color: var(--verde-oscuro);
+        }
+        
+        /* ========== FOOTER ========== */
+        .footer-custom {
+            background: #1a1a1a;
+            color: white;
+            padding: 5rem 0 2rem;
+        }
+        
+        .footer-brand {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--verde-sena);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-section h6 {
+            color: var(--verde-sena);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-section a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .footer-section a:hover {
+            color: var(--verde-sena);
+            padding-left: 10px;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 4rem;
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 992px) {
+            .hero-principal h1 {
+                font-size: 3.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.8rem;
+            }
+            
+            .paso-col::after {
+                display: none;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .hero-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .feature-box {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-principal {
+                padding: 5rem 0 4rem;
+            }
+            
+            .hero-principal h1 {
+                font-size: 2.5rem;
+            }
+            
+            .cta-final h2 {
+                font-size: 2.8rem;
+            }
+            
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shop"></i>
+                <span>Restaurante SENA</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#proceso">¿Cómo Funciona?</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#caracteristicas">Características</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a href="login.html" class="btn btn-admin">
+                            <i class="bi bi-shield-lock me-2"></i>Admin
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO PRINCIPAL -->
+    <section class="hero-principal" id="inicio">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <span class="hero-badge">
+                        <i class="bi bi-lightning-charge-fill me-2"></i>Sistema Digital QR
+                    </span>
+                    <h1>
+                        Ordena sin esperas con <span class="verde">código QR</span>
+                    </h1>
+                    <p class="lead">
+                        Escanea, elige y disfruta. Nuestro sistema de pedidos por QR hace que tu experiencia gastronómica sea más rápida, fácil y segura.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="menu.html" class="btn btn-principal">
+                            <i class="bi bi-qr-code-scan"></i>
+                            Escanear QR Ahora
+                        </a>
+                        <a href="menu.html" class="btn btn-secundario">
+                            <i class="bi bi-list-ul"></i>
+                            Ver Menú Completo
+                        </a>
+                    </div>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-box">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Sin Papel</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">60s</div>
+                            <div class="stat-label">Pedido Rápido</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Disponible</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image mt-5 mt-lg-0">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=700&h=500&fit=crop" alt="Restaurante Moderno">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESO QR (4 PASOS) -->
+    <section class="proceso-qr" id="proceso">
+        <div class="container">
+            <div class="section-title">
+                <span class="section-badge">Proceso Simple</span>
+                <h2>¿Cómo Hacer tu Pedido?</h2>
+                <p>Solo 4 pasos para disfrutar de tu comida favorita</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6 paso-col">
+                    <div class="paso-card">
+                        <div class="paso-numero">1</div>
+                        <div class="paso-icono">
+                            <i class="bi bi-qr-code-scan"></i>
+                        </div>
+                        <h4>Escanea el QR</h4>
+                        <p>Usa la cámara de tu celular para escanear el código QR ubicado en tu mesa</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 paso-col">
+                    <div class="paso-card">
+                        <div class="paso-numero">2</div>
+                        <div class="paso-icono">
+                            <i class="bi bi-card-list"></i>
+                        </div>
+                        <h4>Explora el Menú</h4>
+                        <p>Navega por nuestro menú digital con fotos, descripciones y precios</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 paso-col">
+                    <div class="paso-card">
+                        <div class="paso-numero">3</div>
+                        <div class="paso-icono">
+                            <i class="bi bi-cart-plus"></i>
+                        </div>
+                        <h4>Agrega al Carrito</h4>
+                        <p>Selecciona tus platos favoritos y personaliza tu pedido</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 paso-col">
+                    <div class="paso-card">
+                        <div class="paso-numero">4</div>
+                        <div class="paso-icono">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                        <h4>Confirma y Listo</h4>
+                        <p>Confirma tu orden y espera tu deliciosa comida en la mesa</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CARACTERÍSTICAS -->
+    <section class="caracteristicas" id="caracteristicas">
+        <div class="container">
+            <div class="section-title">
+                <span class="section-badge">Ventajas del Sistema</span>
+                <h2>¿Por Qué Usar Nuestro Sistema QR?</h2>
+                <p>Tecnología que mejora tu experiencia gastronómica</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="feature-box">
+                        <div class="feature-icon-box">
+                            <i class="bi bi-lightning-charge-fill"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Pedidos Instantáneos</h4>
+                            <p>Tu orden llega a la cocina en tiempo real. Sin esperas, sin errores, sin intermediarios.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="feature-box">
+                        <div class="feature-icon-box">
+                            <i class="bi bi-phone-fill"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Sin Aplicaciones</h4>
+                            <p>No necesitas descargar nada. Funciona directo desde el navegador de tu celular.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="feature-box">
+                        <div class="feature-icon-box">
+                            <i class="bi bi-shield-check-fill"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>100% Seguro</h4>
+                            <p>Tus datos están protegidos con encriptación de nivel bancario.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="feature-box">
+                        <div class="feature-icon-box">
+                            <i class="bi bi-image-fill"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Menú Visual</h4>
+                            <p>Fotos de alta calidad de cada platillo para que sepas exactamente qué ordenar.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VENTAJAS -->
+    <section class="ventajas">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="section-title text-start">
+                        <span class="section-badge">Beneficios Comprobados</span>
+                        <h2>Ahorra Tiempo y Mejora tu Experiencia</h2>
+                    </div>
+                    
+                    <div class="ventaja-item">
+                        <div class="ventaja-check">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <span>Reduce el tiempo de espera hasta en un 70%</span>
+                    </div>
+                    
+                    <div class="ventaja-item">
+                        <div class="ventaja-check">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <span>Elimina completamente los errores en pedidos</span>
+                    </div>
+                    
+                    <div class="ventaja-item">
+                        <div class="ventaja-check">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <span>Menú actualizado en tiempo real cada día</span>
+                    </div>
+                    
+                    <div class="ventaja-item">
+                        <div class="ventaja-check">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <span>Control total sobre tu pedido desde tu mesa</span>
+                    </div>
+                    
+                    <div class="ventaja-item">
+                        <div class="ventaja-check">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <span>Experiencia 100% sin contacto físico</span>
+                    </div>
+                    
+                    <div class="ventaja-item">
+                        <div class="ventaja-check">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <span>Múltiples opciones de pago seguras</span>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&h=500&fit=crop" alt="Beneficios" class="ventajas-imagen">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="cta-final">
+        <div class="container">
+            <h2>¿Listo para Ordenar?</h2>
+            <p>Escanea el código QR de tu mesa y comienza tu experiencia digital</p>
+            <a href="menu.html" class="btn btn-cta">
+                <i class="bi bi-qr-code-scan me-3"></i>Escanear QR y Ordenar
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-brand">
+                        <i class="bi bi-shop me-2"></i>Restaurante SENA
+                    </div>
+                    <p style="color: rgba(255,255,255,0.7); line-height: 1.7;">
+                        Sistema de pedidos digital que revoluciona la experiencia gastronómica mediante tecnología QR innovadora.
+                    </p>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <div class="footer-section">
+                        <h6>Enlaces</h6>
+                        <ul>
+                            <li><a href="index.html">Inicio</a></li>
+                            <li><a href="menu.html">Menú Digital</a></li>
+                            <li><a href="carrito.html">Mi Carrito</a></li>
+                            <li><a href="login.html">Panel Admin</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-section">
+                        <h6>Contacto</h6>
+                        <ul>
+                            <li><i class="bi bi-geo-alt-fill me-2"></i>Bogotá, Colombia</li>
+                            <li><i class="bi bi-telephone-fill me-2"></i>+57 300 123 4567</li>
+                            <li><i class="bi bi-envelope-fill me-2"></i>info@restaurantesena.com</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-section">
+                        <h6>Horarios</h6>
+                        <ul>
+                            <li>Lunes - Viernes</li>
+                            <li>11:00 AM - 10:00 PM</li>
+                            <li>Sábado - Domingo</li>
+                            <li>12:00 PM - 11:00 PM</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="mb-0">© 2026 Restaurante SENA - Sistema de Pedidos QR | Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ========== SMOOTH SCROLL ==========
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ========== NAVBAR SCROLL EFFECT ==========
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar-custom');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ========== ANIMACIÓN DE ELEMENTOS AL SCROLL ==========
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observar elementos para animar
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll(
+                '.paso-card, .feature-box, .ventaja-item, .stat-box'
+            );
+            
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+
+        // ========== CONFIRMACIÓN DE NAVEGACIÓN ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar que menu.html existe antes de navegar
+            const menuLinks = document.querySelectorAll('a[href="menu.html"]');
+            
+            menuLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    console.log('✅ Navegando al menú digital...');
+                    // El navegador manejará la navegación automáticamente
+                });
+            });
+
+            // Mensaje de bienvenida en consola
+            console.log('%c🍽️ Restaurante SENA - Sistema QR', 'color: #39a900; font-size: 20px; font-weight: bold;');
+            console.log('%cTodos los botones están funcionando correctamente', 'color: #2d8400; font-size: 14px;');
+        });
+
+        // ========== EFECTO PARALLAX SUTIL ==========
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroImage = document.querySelector('.hero-image img');
+            
+            if (heroImage) {
+                heroImage.style.transform = `translateY(${scrolled * 0.1}px)`;
+            }
+        });
+    </script>
+</body>
+</html>

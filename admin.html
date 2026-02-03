@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Panel Administrativo - Restaurante SENA">
+    <title>Panel Admin - Restaurante SENA</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/pedido-sync.js"></script>
+
+    <style>
+        :root {
+            --sena-green: #28a745;
+            --sena-green-light: #d4edda;
+            --sena-green-lighter: #e9f7ef;
+            --sena-green-dark: #218838;
+            --sena-green-darker: #1e7e34;
+            --sena-white: #ffffff;
+            --sena-gray-light: #f8f9fa;
+            --sena-gray: #6c757d;
+            --sena-gray-dark: #343a40;
+        }
+        
+        body {
+            background-color: var(--sena-gray-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Navbar personalizado - VERDE SENA */
+        .navbar.bg-primary {
+            background: linear-gradient(135deg, var(--sena-green) 0%, var(--sena-green-dark) 100%) !important;
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.2);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Sidebar personalizado */
+        .sidebar {
+            min-height: calc(100vh - 56px);
+            background: var(--sena-white);
+            box-shadow: 2px 0 10px rgba(40, 167, 69, 0.05);
+            position: sticky;
+            top: 56px;
+            border-right: 1px solid var(--sena-green-light);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                min-height: auto;
+                position: relative;
+                top: 0;
+            }
+        }
+        
+        .sidebar .nav-link {
+            color: var(--sena-gray);
+            padding: 0.75rem 1rem;
+            margin: 0.1rem 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar .nav-link:hover {
+            background-color: var(--sena-green-lighter);
+            color: var(--sena-green-dark);
+            transform: translateX(5px);
+        }
+        
+        .sidebar .nav-link.active {
+            background: linear-gradient(135deg, var(--sena-green) 0%, var(--sena-green-dark) 100%);
+            color: var(--sena-white) !important;
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+        }
+        
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        
+        /* Cards personalizadas - Solo verde */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border: 1px solid var(--sena-green-light);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.1);
+        }
+        
+        .card-header {
+            background-color: var(--sena-white);
+            border-bottom: 2px solid var(--sena-green-light);
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+            color: var(--sena-gray-dark);
+        }
+        
+        /* Botones personalizados - Solo verde */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--sena-green) 0%, var(--sena-green-dark) 100%);
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--sena-green-dark) 0%, var(--sena-green-darker) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid var(--sena-green);
+            color: var(--sena-green);
+            background: transparent;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--sena-green);
+            border-color: var(--sena-green);
+            color: var(--sena-white);
+        }
+        
+        /* Badges personalizados - Tono verde */
+        .badge {
+            border-radius: 10px;
+            padding: 0.35em 0.75em;
+            font-weight: 500;
+            font-size: 0.85em;
+        }
+        
+        .bg-primary {
+            background-color: var(--sena-green) !important;
+        }
+        
+        /* Tablas personalizadas */
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            border-bottom: 2px solid var(--sena-green);
+            color: var(--sena-gray-dark);
+            font-weight: 600;
+            background-color: var(--sena-green-lighter);
+            padding: 1rem;
+        }
+        
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: var(--sena-green-lighter);
+        }
+        
+        /* Modal personalizado - Verde */
+        .modal-header.bg-primary {
+            background: linear-gradient(135deg, var(--sena-green) 0%, var(--sena-green-dark) 100%) !important;
+            color: var(--sena-white);
+            border-radius: 0;
+        }
+        
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Progress bars - Verde */
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+            background-color: var(--sena-green-lighter);
+        }
+        
+        .progress-bar {
+            background-color: var(--sena-green);
+        }
+        
+        /* Notificaciones */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 0.7rem;
+        }
+        
+        /* Estilos para estados - Tono verde */
+        .status-pendiente {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .status-preparacion {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .status-listo {
+            background-color: var(--sena-green-light);
+            color: var(--sena-green-darker);
+            border: 1px solid #c3e6cb;
+        }
+        
+        /* Breadcrumb personalizado */
+        .breadcrumb {
+            background-color: var(--sena-white);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(40, 167, 69, 0.05);
+            border: 1px solid var(--sena-green-light);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-bottom: 1rem;
+                height: auto;
+                position: relative;
+            }
+            
+            .card {
+                margin-bottom: 1rem;
+            }
+            
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Scroll personalizado - Verde */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--sena-green-lighter);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--sena-green);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--sena-green-dark);
+        }
+        
+        /* Estilos específicos para el dashboard */
+        .stat-card {
+            height: 100%;
+            border-top: 3px solid var(--sena-green);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background-color: var(--sena-green-lighter);
+            color: var(--sena-green);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--sena-green-dark);
+        }
+        
+        .stat-label {
+            color: var(--sena-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-change {
+            font-size: 0.85rem;
+        }
+        
+        /* List group personalizado */
+        .list-group-item {
+            border: none;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--sena-green-light);
+        }
+        
+        .list-group-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Formularios personalizados */
+        .form-control, .form-select {
+            border: 2px solid var(--sena-green-light);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--sena-green);
+            box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+        }
+        
+        /* Alertas personalizadas - Tono verde */
+        .alert {
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            border-left: 4px solid;
+        }
+        
+        .alert-success {
+            background-color: var(--sena-green-light);
+            border-color: var(--sena-green);
+            color: var(--sena-green-darker);
+        }
+        
+        /* Paginación personalizada - Verde */
+        .page-link {
+            color: var(--sena-green);
+            border: 1px solid var(--sena-green-light);
+            margin: 0 2px;
+            border-radius: 5px;
+        }
+        
+        .page-link:hover {
+            background-color: var(--sena-green-lighter);
+            border-color: var(--sena-green);
+            color: var(--sena-green-dark);
+        }
+        
+        .page-item.active .page-link {
+            background-color: var(--sena-green);
+            border-color: var(--sena-green);
+            color: var(--sena-white);
+        }
+        
+        /* Text colors */
+        .text-primary {
+            color: var(--sena-green) !important;
+        }
+        
+        .text-success {
+            color: var(--sena-green) !important;
+        }
+        
+        /* Background colors con opacidad */
+        .bg-primary.bg-opacity-10 {
+            background-color: rgba(40, 167, 69, 0.1) !important;
+        }
+        
+        .bg-success.bg-opacity-10 {
+            background-color: rgba(40, 167, 69, 0.1) !important;
+        }
+        
+        .bg-warning.bg-opacity-10 {
+            background-color: rgba(255, 193, 7, 0.1) !important;
+        }
+        
+        .bg-danger.bg-opacity-10 {
+            background-color: rgba(220, 53, 69, 0.1) !important;
+        }
+        
+        /* Icon colors */
+        .text-primary {
+            color: var(--sena-green) !important;
+        }
+        
+        .text-success {
+            color: var(--sena-green) !important;
+        }
+        
+        .text-warning {
+            color: #ffc107 !important;
+        }
+        
+        .text-danger {
+            color: #dc3545 !important;
+        }
+        
+        /* Botón para simular pedidos (solo desarrollo) */
+        .dev-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    
+    <!-- Header / Navbar Admin -->
+    <header class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm" style="z-index: 1030;">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="admin.html">
+                <i class="fas fa-utensils fs-3 me-2"></i>
+                <div>
+                    <span class="fw-bold fs-5">Restaurante SENA</span>
+                    <small class="d-block" style="font-size: 0.75rem; opacity: 0.9;">Panel Administrativo</small>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" 
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item me-3 d-none d-md-block">
+                        <a class="btn btn-outline-light btn-sm" href="index.html" target="_blank">
+                            <i class="fas fa-external-link-alt me-1"></i> Ver Sitio Web
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center py-2" href="#" id="userDropdown" 
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="position-relative me-2">
+                                <i class="fas fa-user-circle fs-4"></i>
+                            </div>
+                            <div class="d-none d-md-block text-start">
+                                <div id="adminName" class="fw-bold">Administrador</div>
+                                <small id="adminRole" style="font-size: 0.75rem; opacity: 0.8;">Cargando...</small>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="userDropdown" style="min-width: 200px;">
+                            <li><h6 class="dropdown-header text-primary">Cuenta Administrativa</h6></li>
+                            <li><a class="dropdown-item" href="#configuracion" data-bs-toggle="pill"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+                            <li><a class="dropdown-item" href="#" id="profileBtn"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger logout-link" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+                <div class="position-sticky pt-3" style="height: calc(100vh - 56px); overflow-y: auto;">
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item mb-2">
+                            <a class="nav-link active" href="#dashboard" data-bs-toggle="pill">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" href="#pedidos" data-bs-toggle="pill">
+                                <i class="fas fa-list-check me-2"></i>Pedidos Activos
+                                <span class="badge bg-danger notification-badge" id="pedidosBadge">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" href="#menu" data-bs-toggle="pill">
+                                <i class="fas fa-utensils me-2"></i>Gestionar Menú
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" href="#inventario" data-bs-toggle="pill">
+                                <i class="fas fa-boxes-stacked me-2"></i>Inventario
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" href="#empleados" data-bs-toggle="pill">
+                                <i class="fas fa-users me-2"></i>Empleados
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" href="#reportes" data-bs-toggle="pill">
+                                <i class="fas fa-chart-bar me-2"></i>Reportes
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" href="#configuracion" data-bs-toggle="pill">
+                                <i class="fas fa-cogs me-2"></i>Configuración
+                            </a>
+                        </li>
+                    </ul>
+
+                    <hr class="my-4">
+
+                    <div class="px-3 mb-4">
+                        <small class="text-muted d-block mb-3 fw-bold">ACCESOS RÁPIDOS</small>
+                        <button class="btn btn-sm btn-outline-primary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                            <i class="fas fa-plus-circle me-1"></i> Nuevo Producto
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary w-100 mb-2" onclick="exportData()">
+                            <i class="fas fa-download me-1"></i> Exportar Datos
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary w-100" onclick="showTodaySummary()">
+                            <i class="fas fa-calendar-day me-1"></i> Resumen Hoy
+                        </button>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="px-3">
+                        <div class="card bg-light border-0">
+                            <div class="card-body p-3">
+                                <h6 class="card-title mb-3">
+                                    <i class="fas fa-info-circle text-primary me-1"></i> Estado del Sistema
+                                </h6>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small>Pedidos pendientes:</small>
+                                    <span class="badge bg-warning" id="pendingOrdersCount">0</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small>Productos bajos:</small>
+                                    <span class="badge bg-danger" id="lowStockCount">0</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small>Servidor:</small>
+                                    <span class="badge bg-success" id="serverStatus">
+                                        <i class="fas fa-circle me-1"></i> Activo
+                                    </span>
+                                </div>
+                                <div class="mt-3 text-center">
+                                    <small class="text-muted" id="lastUpdate">Última actualización: --:--</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Contenido Principal -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="admin.html" class="text-decoration-none"><i class="fas fa-home"></i> Inicio</a></li>
+                        <li class="breadcrumb-item active fw-bold" id="currentPage" aria-current="page">Dashboard</li>
+                        <li class="breadcrumb-item ms-auto">
+                            <span class="text-muted">
+                                <i class="fas fa-clock me-1"></i> 
+                                <span id="currentTime">--:--:--</span> | 
+                                <span id="currentDate">--/--/----</span>
+                            </span>
+                        </li>
+                    </ol>
+                </nav>
+                
+                <div class="tab-content" id="adminContent">
+                    
+                    <!-- TAB: Dashboard -->
+                    <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="fw-bold text-primary">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </h2>
+                            <div class="text-muted">
+                                <i class="fas fa-calendar-day me-1"></i>
+                                <span id="dashboardDate"></span>
+                            </div>
+                        </div>
+
+                        <!-- Tarjetas de Estadísticas -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card stat-card border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="stat-label">Pedidos Hoy</p>
+                                                <h2 class="stat-value" id="statPedidosHoy">0</h2>
+                                                <small class="stat-change text-success" id="pedidosChange">
+                                                    <i class="fas fa-arrow-up me-1"></i> Cargando...
+                                                </small>
+                                            </div>
+                                            <div class="stat-icon">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <small class="text-muted">Meta: 60 pedidos</small>
+                                            <div class="progress">
+                                                <div class="progress-bar" id="pedidosProgress" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card stat-card border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="stat-label">Ventas del Día</p>
+                                                <h2 class="stat-value" id="statVentasHoy">$0</h2>
+                                                <small class="stat-change text-success" id="ventasChange">
+                                                    <i class="fas fa-arrow-up me-1"></i> Cargando...
+                                                </small>
+                                            </div>
+                                            <div class="stat-icon">
+                                                <i class="fas fa-money-bill-wave"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <small class="text-muted">Meta: $3M</small>
+                                            <div class="progress">
+                                                <div class="progress-bar" id="ventasProgress" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card stat-card border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="stat-label">Mesas Ocupadas</p>
+                                                <h2 class="stat-value" id="statMesasOcupadas">0/20</h2>
+                                                <small class="stat-change text-warning" id="mesasChange">
+                                                    <i class="fas fa-users"></i> Cargando...
+                                                </small>
+                                            </div>
+                                            <div class="stat-icon">
+                                                <i class="fas fa-chair"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <small class="text-muted">Óptimo: 70-80%</small>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-warning" id="mesasProgress" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card stat-card border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="stat-label">Productos Activos</p>
+                                                <h2 class="stat-value" id="statProductosActivos">0</h2>
+                                                <small class="stat-change text-success" id="productosChange">
+                                                    <i class="fas fa-arrow-up me-1"></i> Cargando...
+                                                </small>
+                                            </div>
+                                            <div class="stat-icon">
+                                                <i class="fas fa-box-open"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <small class="text-muted">Total: <span id="totalProductos">0</span> productos</small>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-info" id="productosProgress" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gráficos y Actividad Reciente -->
+                        <div class="row g-3">
+                            <div class="col-lg-8">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0 fw-bold text-primary">
+                                            <i class="fas fa-chart-line me-2"></i>Ventas de la Semana
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container" style="position: relative; height: 300px;">
+                                            <canvas id="salesChart"></canvas>
+                                        </div>
+                                        <div class="text-center text-muted mt-3">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Gráfico de ventas de los últimos 7 días
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0 fw-bold text-primary">
+                                            <i class="fas fa-trophy me-2"></i>Más Vendidos Hoy
+                                        </h5>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="list-group list-group-flush" id="topProductsList">
+                                            <div class="list-group-item px-3 py-3 text-center">
+                                                <div class="spinner-border text-primary spinner-border-sm" role="status">
+                                                    <span class="visually-hidden">Cargando...</span>
+                                                </div>
+                                                <small class="ms-2">Cargando productos...</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actividad Reciente -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0 fw-bold text-primary">
+                                            <i class="fas fa-history me-2"></i>Actividad Reciente
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover" id="recentActivityTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Hora</th>
+                                                        <th>Acción</th>
+                                                        <th>Usuario</th>
+                                                        <th>Detalles</th>
+                                                        <th>Estado</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="activityTableBody">
+                                                    <tr>
+                                                        <td colspan="5" class="text-center py-4">
+                                                            <div class="spinner-border text-primary spinner-border-sm" role="status">
+                                                                <span class="visually-hidden">Cargando...</span>
+                                                            </div>
+                                                            <span class="ms-2">Cargando actividad...</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- TAB: Pedidos Activos -->
+                    <div class="tab-pane fade" id="pedidos" role="tabpanel">
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="fw-bold text-primary">
+                                <i class="fas fa-list-check me-2"></i>Pedidos Activos
+                            </h2>
+                            <div>
+                                <button class="btn btn-outline-primary me-2" onclick="refreshOrders()">
+                                    <i class="fas fa-sync-alt me-1"></i> Actualizar
+                                </button>
+                                <button class="btn btn-primary" onclick="simularNuevoPedido()">
+                                    <i class="fas fa-plus me-1"></i> Simular Pedido
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Filtros -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <label class="form-label small fw-bold">Estado:</label>
+                                        <select class="form-select" id="filterEstado">
+                                            <option value="todos">Todos</option>
+                                            <option value="pendiente">Pendiente</option>
+                                            <option value="preparacion">En Preparación</option>
+                                            <option value="listo">Listo</option>
+                                            <option value="entregado">Entregado</option>
+                                            <option value="cancelado">Cancelado</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small fw-bold">Mesa:</label>
+                                        <select class="form-select" id="filterMesa">
+                                            <option value="todas">Todas</option>
+                                            <option value="1">Mesa 1</option>
+                                            <option value="2">Mesa 2</option>
+                                            <option value="3">Mesa 3</option>
+                                            <option value="4">Mesa 4</option>
+                                            <option value="5">Mesa 5</option>
+                                            <option value="6">Mesa 6</option>
+                                            <option value="7">Mesa 7</option>
+                                            <option value="8">Mesa 8</option>
+                                            <option value="9">Mesa 9</option>
+                                            <option value="10">Mesa 10</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small fw-bold">Fecha:</label>
+                                        <input type="date" class="form-control" id="filterFecha" value="">
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button class="btn btn-primary w-100" onclick="filterOrders()">
+                                            <i class="fas fa-filter me-1"></i> Filtrar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estadísticas Rápidas -->
+                        <div class="row mb-4 g-2">
+                            <div class="col-md-3">
+                                <div class="card bg-primary bg-opacity-10 border-0">
+                                    <div class="card-body py-2">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-clock text-primary fs-4 me-3"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Pendientes</small>
+                                                <strong class="fs-5" id="statsPendientes">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-warning bg-opacity-10 border-0">
+                                    <div class="card-body py-2">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-utensils text-warning fs-4 me-3"></i>
+                                            <div>
+                                                <small class="text-muted d-block">En Preparación</small>
+                                                <strong class="fs-5" id="statsPreparacion">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success bg-opacity-10 border-0">
+                                    <div class="card-body py-2">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-check-circle text-success fs-4 me-3"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Listos</small>
+                                                <strong class="fs-5" id="statsListos">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-info bg-opacity-10 border-0">
+                                    <div class="card-body py-2">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-box text-info fs-4 me-3"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Entregados Hoy</small>
+                                                <strong class="fs-5" id="statsEntregados">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lista de Pedidos -->
+                        <div class="row g-3" id="pedidosContainer">
+                            <div class="col-12">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body text-center py-5">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Cargando...</span>
+                                        </div>
+                                        <p class="mt-3">Cargando pedidos...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mensaje si no hay pedidos -->
+                        <div class="d-none" id="noOrdersMessage">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body text-center py-5">
+                                    <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No hay pedidos activos</h5>
+                                    <p class="text-muted">No se encontraron pedidos con los filtros aplicados</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- TAB: Gestionar Menú -->
+                    <div class="tab-pane fade" id="menu" role="tabpanel">
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="fw-bold text-primary">
+                                <i class="fas fa-utensils me-2"></i>Gestionar Menú
+                            </h2>
+                            <div>
+                                <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                                    <i class="fas fa-plus-circle me-1"></i> Agregar Producto
+                                </button>
+                                <button class="btn btn-outline-primary" onclick="exportMenu()">
+                                    <i class="fas fa-print me-1"></i> Imprimir Menú
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Búsqueda y Filtros -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light">
+                                                <i class="fas fa-search"></i>
+                                            </span>
+                                            <input type="text" class="form-control" id="searchProduct" placeholder="Buscar producto por nombre, SKU o descripción...">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" id="filterCategory">
+                                            <option value="todas">Todas las categorías</option>
+                                            <option value="entradas">Entradas</option>
+                                            <option value="principales">Platos Principales</option>
+                                            <option value="bebidas">Bebidas</option>
+                                            <option value="postres">Postres</option>
+                                            <option value="especiales">Especiales</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" id="filterStatus">
+                                            <option value="todos">Todos los estados</option>
+                                            <option value="disponible">Disponible</option>
+                                            <option value="agotado">Agotado</option>
+                                            <option value="descontinuado">Descontinuado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tabla de Productos -->
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle" id="productsTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width: 10%;">Imagen</th>
+                                                <th style="width: 25%;">Nombre</th>
+                                                <th style="width: 15%;">Categoría</th>
+                                                <th style="width: 15%;">Precio</th>
+                                                <th style="width: 15%;">Estado</th>
+                                                <th style="width: 20%;" class="text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="productsTableBody">
+                                            <tr>
+                                                <td colspan="6" class="text-center py-5">
+                                                    <div class="spinner-border text-primary" role="status">
+                                                        <span class="visually-hidden">Cargando...</span>
+                                                    </div>
+                                                    <p class="mt-3">Cargando productos...</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- TAB: Inventario -->
+                    <div class="tab-pane fade" id="inventario" role="tabpanel">
+                        <h2 class="fw-bold text-primary mb-4">
+                            <i class="fas fa-boxes-stacked me-2"></i>Gestión de Inventario
+                        </h2>
+                        
+                        <div class="alert alert-success">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Esta sección permite gestionar el inventario de productos del restaurante.
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Productos con Stock Bajo</h5>
+                                        <button class="btn btn-sm btn-primary" onclick="loadLowStockProducts()">
+                                            <i class="fas fa-sync-alt me-1"></i> Actualizar
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-warning" id="lowStockAlert">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            <strong id="lowStockMessage">Cargando...</strong>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover" id="lowStockTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Producto</th>
+                                                        <th>Stock Actual</th>
+                                                        <th>Stock Mínimo</th>
+                                                        <th>Estado</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="lowStockTableBody">
+                                                    <!-- Los productos con stock bajo se cargarán aquí -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Acciones Rápidas</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <button class="btn btn-primary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#addInventoryModal">
+                                            <i class="fas fa-plus me-1"></i> Nuevo Ingreso
+                                        </button>
+                                        <button class="btn btn-outline-primary w-100 mb-2" onclick="exportInventory()">
+                                            <i class="fas fa-file-export me-1"></i> Exportar Inventario
+                                        </button>
+                                        <button class="btn btn-outline-primary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#inventorySettingsModal">
+                                            <i class="fas fa-bell me-1"></i> Configurar Alertas
+                                        </button>
+                                        <button class="btn btn-outline-primary w-100" onclick="generateInventoryReport()">
+                                            <i class="fas fa-file-pdf me-1"></i> Reporte PDF
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: Empleados -->
+                    <div class="tab-pane fade" id="empleados" role="tabpanel">
+                        <h2 class="fw-bold text-primary mb-4">
+                            <i class="fas fa-users me-2"></i>Gestión de Empleados
+                        </h2>
+                        
+                        <div class="alert alert-success">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Gestión del personal del restaurante.
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <div class="card border-0 shadow-sm text-center h-100">
+                                    <div class="card-body">
+                                        <i class="fas fa-user-chef text-primary fs-1 mb-3"></i>
+                                        <h5>Chefs</h5>
+                                        <h2 class="text-primary" id="chefsCount">0</h2>
+                                        <small class="text-muted">Activos: <span id="activeChefs">0</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card border-0 shadow-sm text-center h-100">
+                                    <div class="card-body">
+                                        <i class="fas fa-user-waiter text-primary fs-1 mb-3"></i>
+                                        <h5>Meseros</h5>
+                                        <h2 class="text-primary" id="waitersCount">0</h2>
+                                        <small class="text-muted">Activos: <span id="activeWaiters">0</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card border-0 shadow-sm text-center h-100">
+                                    <div class="card-body">
+                                        <i class="fas fa-user-tie text-primary fs-1 mb-3"></i>
+                                        <h5>Administrativos</h5>
+                                        <h2 class="text-primary" id="adminStaffCount">0</h2>
+                                        <small class="text-muted">Activos: <span id="activeAdminStaff">0</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card border-0 shadow-sm text-center h-100">
+                                    <div class="card-body">
+                                        <i class="fas fa-users-gear text-primary fs-1 mb-3"></i>
+                                        <h5>Total Personal</h5>
+                                        <h2 class="text-primary" id="totalStaffCount">0</h2>
+                                        <small class="text-muted">Activos: <span id="activeTotalStaff">0</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: Reportes -->
+                    <div class="tab-pane fade" id="reportes" role="tabpanel">
+                        <h2 class="fw-bold text-primary mb-4">
+                            <i class="fas fa-chart-bar me-2"></i>Reportes y Estadísticas
+                        </h2>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="card border-0 shadow-sm text-center h-100">
+                                    <div class="card-body d-flex flex-column">
+                                        <i class="fas fa-calendar-week text-primary fs-1 mb-3"></i>
+                                        <h6>Reporte Semanal</h6>
+                                        <p class="text-muted small">Resumen de ventas y pedidos</p>
+                                        <div class="mt-auto">
+                                            <button class="btn btn-outline-primary w-100" onclick="generateReport('semanal')">
+                                                <i class="fas fa-download me-1"></i>Generar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-0 shadow-sm text-center h-100">
+                                    <div class="card-body d-flex flex-column">
+                                        <i class="fas fa-calendar-month text-primary fs-1 mb-3"></i>
+                                        <h6>Reporte Mensual</h6>
+                                        <p class="text-muted small">Análisis completo del mes</p>
+                                        <div class="mt-auto">
+                                            <button class="btn btn-outline-primary w-100" onclick="generateReport('mensual')">
+                                                <i class="fas fa-download me-1"></i>Generar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-0 shadow-sm text-center h-100">
+                                    <div class="card-body d-flex flex-column">
+                                        <i class="fas fa-chart-pie text-primary fs-1 mb-3"></i>
+                                        <h6>Reporte Personalizado</h6>
+                                        <p class="text-muted small">Configura tus propios parámetros</p>
+                                        <div class="mt-auto">
+                                            <button class="btn btn-outline-primary w-100" onclick="customReport()">
+                                                <i class="fas fa-sliders-h me-1"></i>Configurar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: Configuración -->
+                    <div class="tab-pane fade" id="configuracion" role="tabpanel">
+                        <h2 class="fw-bold text-primary mb-4">
+                            <i class="fas fa-cogs me-2"></i>Configuración del Sistema
+                        </h2>
+                        
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-4">Configuración General</h5>
+                                        
+                                        <form id="configForm">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Nombre del Restaurante</label>
+                                                <input type="text" class="form-control" value="Restaurante SENA" required>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Dirección</label>
+                                                <input type="text" class="form-control" value="Calle 57 #8-69, Bogotá D.C." required>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">Teléfono</label>
+                                                    <input type="tel" class="form-control" value="+57 601 5461500" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">Email</label>
+                                                    <input type="email" class="form-control" value="info@restaurantesena.com" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Horario de Atención</label>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="form-label small">Apertura</label>
+                                                        <input type="time" class="form-control" value="11:00">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label small">Cierre</label>
+                                                        <input type="time" class="form-control" value="22:00">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label fw-bold">Configuración del Sistema</label>
+                                                <div class="form-check form-switch mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="acceptOrders" checked>
+                                                    <label class="form-check-label" for="acceptOrders">
+                                                        Aceptar nuevos pedidos
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-switch mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="notifications" checked>
+                                                    <label class="form-check-label" for="notifications">
+                                                        Notificaciones en tiempo real
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-switch mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="autoUpdateStock">
+                                                    <label class="form-check-label" for="autoUpdateStock">
+                                                        Actualizar stock automáticamente
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="maintenanceMode">
+                                                    <label class="form-check-label" for="maintenanceMode">
+                                                        Modo mantenimiento
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-save me-1"></i>Guardar Cambios
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Modal: Agregar Producto -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addProductModalLabel">
+                        <i class="fas fa-plus-circle me-2"></i>Agregar Nuevo Producto
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="productName" class="form-label">Nombre del Producto *</label>
+                                <input type="text" class="form-control" id="productName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="productCategory" class="form-label">Categoría *</label>
+                                <select class="form-select" id="productCategory" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="entradas">Entradas</option>
+                                    <option value="principales">Platos Principales</option>
+                                    <option value="bebidas">Bebidas</option>
+                                    <option value="postres">Postres</option>
+                                    <option value="especiales">Especiales</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="productPrice" class="form-label">Precio *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="productPrice" required min="0" step="100">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="productTime" class="form-label">Tiempo de Preparación (min)</label>
+                                <input type="number" class="form-control" id="productTime" placeholder="15" min="1">
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="productDescription" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="productDescription" rows="3" placeholder="Descripción detallada del producto..."></textarea>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="productImage" class="form-label">Imagen del Producto</label>
+                                <input type="file" class="form-control" id="productImage" accept="image/*">
+                                <small class="text-muted">Formatos: JPG, PNG, WEBP (Max. 2MB)</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="productStatus" class="form-label">Estado</label>
+                                <select class="form-select" id="productStatus">
+                                    <option value="disponible" selected>Disponible</option>
+                                    <option value="agotado">Agotado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="addProductForm" class="btn btn-primary" id="saveProductBtn">
+                        <i class="fas fa-save me-1"></i>Guardar Producto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Ver Detalles del Pedido -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-eye me-2"></i>Detalles del Pedido
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="orderDetailsContent">
+                    <!-- Contenido dinámico -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="printOrder()">
+                        <i class="fas fa-print me-1"></i>Imprimir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Inventario -->
+    <div class="modal fade" id="inventarioModal" tabindex="-1" aria-labelledby="inventarioModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="inventarioModalLabel">
+                        <i class="fas fa-boxes-stacked me-2"></i>Gestión de Inventario
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>En esta sección puedes:</p>
+                    <ul>
+                        <li>Ver niveles de stock de productos</li>
+                        <li>Recibir nuevos ingresos de inventario</li>
+                        <li>Configurar alertas de stock bajo</li>
+                        <li>Generar reportes de inventario</li>
+                    </ul>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Importante:</strong> Revisa diariamente los productos con stock bajo.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón de desarrollo para simular pedidos -->
+    <button class="btn btn-primary dev-btn" onclick="simularNuevoPedido()" title="Simular nuevo pedido (solo desarrollo)">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Scripts del sistema -->
+    <script src="js/admin-auth.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/pedido-sync.js"></script>
+
+    <!-- Script de configuración -->
+    <script>
+        // Sistema global
+        let sistema;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar sistema
+            inicializarSistema();
+            
+            // Actualizar fecha y hora en tiempo real
+            function updateDateTime() {
+                const now = new Date();
+                const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                
+                const dateStr = now.toLocaleDateString('es-ES', dateOptions);
+                const timeStr = now.toLocaleTimeString('es-ES', timeOptions);
+                
+                document.getElementById('currentDate').textContent = dateStr;
+                document.getElementById('currentTime').textContent = timeStr;
+                document.getElementById('dashboardDate').textContent = dateStr;
+            }
+            
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            
+            // Configurar filtro de fecha por defecto a hoy
+            const fechaInput = document.getElementById('filterFecha');
+            if (fechaInput) {
+                const today = new Date().toISOString().split('T')[0];
+                fechaInput.value = today;
+            }
+            
+            // Manejar cambio de pestañas
+            const tabLinks = document.querySelectorAll('[data-bs-toggle="pill"]');
+            tabLinks.forEach(link => {
+                link.addEventListener('shown.bs.tab', function(e) {
+                    const activeTab = e.target.getAttribute('href').substring(1);
+                    const pageTitles = {
+                        'dashboard': 'Dashboard',
+                        'pedidos': 'Pedidos Activos',
+                        'menu': 'Gestionar Menú',
+                        'inventario': 'Inventario',
+                        'empleados': 'Empleados',
+                        'reportes': 'Reportes',
+                        'configuracion': 'Configuración'
+                    };
+                    
+                    document.getElementById('currentPage').textContent = pageTitles[activeTab] || 'Dashboard';
+                    
+                    // Cargar datos específicos de la pestaña
+                    setTimeout(() => {
+                        if (sistema) {
+                            if (activeTab === 'menu') {
+                                loadProducts();
+                            } else if (activeTab === 'pedidos') {
+                                loadOrders();
+                            } else if (activeTab === 'inventario') {
+                                loadLowStockProducts();
+                            } else if (activeTab === 'dashboard') {
+                                actualizarDashboard();
+                            }
+                        }
+                    }, 100);
+                });
+            });
+            
+            // Configurar formulario de nuevo producto
+            const addProductForm = document.getElementById('addProductForm');
+            if (addProductForm) {
+                addProductForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const saveBtn = document.getElementById('saveProductBtn');
+                    const originalText = saveBtn.innerHTML;
+                    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                    saveBtn.disabled = true;
+                    
+                    // Simular guardado
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    showNotification('Producto agregado exitosamente', 'success');
+                    
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+                    modal.hide();
+                    
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                    
+                    // Recargar productos
+                    loadProducts();
+                });
+            }
+            
+            // Configurar formulario de configuración
+            const configForm = document.getElementById('configForm');
+            if (configForm) {
+                configForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    showNotification('Configuración guardada exitosamente', 'success');
+                });
+            }
+            
+            // Configurar SKU automático
+            const productNameInput = document.getElementById('productName');
+            const productCodeInput = document.getElementById('productCode');
+            
+            if (productNameInput && productCodeInput) {
+                productNameInput.addEventListener('blur', function() {
+                    if (this.value && !productCodeInput.value) {
+                        const namePart = this.value.substring(0, 3).toUpperCase();
+                        const randomPart = Math.floor(1000 + Math.random() * 9000);
+                        productCodeInput.value = `PROD-${namePart}-${randomPart}`;
+                    }
+                });
+            }
+            
+            // Inicializar dashboard
+            setTimeout(() => {
+                actualizarDashboard();
+                loadOrders();
+            }, 500);
+            
+            // Configurar auto-actualización
+            setInterval(() => {
+                // Sincronizar pedidos externos
+                sincronizarPedidosExternos();
+                
+                // Actualizar vista activa
+                if (document.querySelector('.tab-pane.active#dashboard')) {
+                    actualizarDashboard();
+                }
+                if (document.querySelector('.tab-pane.active#pedidos')) {
+                    loadOrders();
+                }
+            }, 10000); // Cada 10 segundos
+        });
+        
+        // ==================== FUNCIONES DEL SISTEMA ====================
+        
+        function inicializarSistema() {
+            // Verificar autenticación primero
+            const isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            if (!isAdminLoggedIn || currentUser.username !== 'admin') {
+                alert('Acceso denegado. Solo administradores pueden acceder.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Inicializar datos del sistema
+            sistema = new SistemaRestaurante();
+            window.sistema = sistema;
+            
+            // Mostrar nombre del usuario
+            document.getElementById('adminName').textContent = currentUser.nombre || currentUser.username;
+            document.getElementById('adminRole').textContent = 'Administrador';
+            
+            // Configurar logout
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                    localStorage.removeItem('isAdminLoggedIn');
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            // Sincronizar pedidos externos
+            sincronizarPedidosExternos();
+            
+            return sistema;
+        }
+        
+        function sincronizarPedidosExternos() {
+            if (!sistema) return;
+            
+            const pedidosGlobales = JSON.parse(localStorage.getItem('pedidos_global') || '[]');
+            
+            if (pedidosGlobales.length > 0) {
+                let nuevos = 0;
+                pedidosGlobales.forEach(pedidoGlobal => {
+                    const existe = sistema.pedidos.some(p => p.id === pedidoGlobal.id);
+                    if (!existe) {
+                        sistema.pedidos.unshift(pedidoGlobal);
+                        nuevos++;
+                        
+                        // Registrar venta
+                        sistema.registrarVenta(pedidoGlobal);
+                        
+                        // Actualizar stock
+                        sistema.actualizarVentasProductos(pedidoGlobal.productos);
+                    }
+                });
+                
+                if (nuevos > 0) {
+                    sistema.guardarDatos();
+                    localStorage.removeItem('pedidos_global');
+                    
+                    // Notificar
+                    if (document.querySelector('.tab-pane.active#dashboard') || 
+                        document.querySelector('.tab-pane.active#pedidos')) {
+                        showNotification(`${nuevos} nuevo(s) pedido(s) sincronizado(s)`, 'success');
+                        
+                        // Actualizar vistas
+                        actualizarDashboard();
+                        loadOrders();
+                    }
+                }
+            }
+        }
+        
+        // ==================== FUNCIONES DE INTERFAZ ====================
+        
+        function actualizarDashboard() {
+            if (!sistema) return;
+            
+            const stats = sistema.obtenerEstadisticasHoy();
+            
+            // Actualizar tarjetas
+            document.getElementById('statPedidosHoy').textContent = stats.pedidosHoy;
+            document.getElementById('statVentasHoy').textContent = `$${Math.round(stats.ventasHoy / 1000)}K`;
+            document.getElementById('statMesasOcupadas').textContent = `${stats.mesasOcupadas}/20`;
+            document.getElementById('statProductosActivos').textContent = stats.productosActivos;
+            document.getElementById('totalProductos').textContent = stats.totalProductos;
+            
+            // Actualizar progreso
+            document.getElementById('pedidosProgress').style.width = `${Math.min((stats.pedidosHoy / 60) * 100, 100)}%`;
+            document.getElementById('ventasProgress').style.width = `${Math.min((stats.ventasHoy / 3000000) * 100, 100)}%`;
+            document.getElementById('mesasProgress').style.width = `${stats.porcentajeOcupacion}%`;
+            document.getElementById('productosProgress').style.width = `${Math.min((stats.productosActivos / stats.totalProductos) * 100, 100)}%`;
+            
+            // Actualizar cambios
+            document.getElementById('pedidosChange').innerHTML = `<i class="fas fa-arrow-up me-1"></i> ${stats.pedidosHoy} hoy`;
+            document.getElementById('ventasChange').innerHTML = `<i class="fas fa-arrow-up me-1"></i> $${Math.round(stats.ventasHoy / 1000)}K`;
+            document.getElementById('mesasChange').innerHTML = `<i class="fas fa-users"></i> ${stats.porcentajeOcupacion}%`;
+            document.getElementById('productosChange').innerHTML = `<i class="fas fa-tags"></i> ${stats.productosActivos} activos`;
+            
+            // Actualizar top productos
+            const topProductsList = document.getElementById('topProductsList');
+            if (topProductsList) {
+                if (stats.topProductos.length > 0) {
+                    topProductsList.innerHTML = stats.topProductos.map((producto, index) => `
+                        <div class="list-group-item px-3 py-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <span class="badge ${index === 0 ? 'bg-primary' : 'bg-secondary'} rounded-circle me-3" 
+                                      style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">${index + 1}</span>
+                                <div>
+                                    <strong>${producto.nombre}</strong>
+                                    <br>
+                                    <small class="text-muted">${producto.categoria || 'General'}</small>
+                                </div>
+                            </div>
+                            <span class="badge bg-success">${producto.cantidad} uds</span>
+                        </div>
+                    `).join('');
+                } else {
+                    topProductsList.innerHTML = `
+                        <div class="list-group-item px-3 py-3 text-center">
+                            <i class="fas fa-clipboard-list text-muted fa-2x mb-2"></i>
+                            <p class="mb-0 text-muted">No hay ventas hoy</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Actualizar actividad reciente
+            const actividad = sistema.obtenerActividadReciente(5);
+            const activityTableBody = document.getElementById('activityTableBody');
+            if (activityTableBody) {
+                if (actividad.length > 0) {
+                    activityTableBody.innerHTML = actividad.map(item => `
+                        <tr>
+                            <td><small>${item.hora}</small></td>
+                            <td>${item.accion}</td>
+                            <td>${item.usuario}</td>
+                            <td>${item.detalles}</td>
+                            <td>
+                                <span class="badge ${obtenerClaseEstado(item.estado)}">
+                                    ${traducirEstado(item.estado)}
+                                </span>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    activityTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <i class="fas fa-history text-muted fa-2x mb-2"></i>
+                                <p class="text-muted mb-0">No hay actividad reciente</p>
+                            </td>
+                        </tr>
+                    `;
+                }
+            }
+            
+            // Actualizar gráfico de ventas
+            actualizarGraficoVentas();
+            
+            // Actualizar contadores en sidebar
+            actualizarSidebarStats(stats);
+        }
+        
+        function actualizarGraficoVentas() {
+            if (!sistema) return;
+            
+            const ventasData = sistema.obtenerDatosVentas(7);
+            const ctx = document.getElementById('salesChart');
+            
+            if (!ctx) return;
+            
+            // Destruir gráfico anterior si existe
+            if (window.ventasChart) {
+                window.ventasChart.destroy();
+            }
+            
+            window.ventasChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ventasData.labels,
+                    datasets: [{
+                        label: 'Ventas ($)',
+                        data: ventasData.datos,
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#28a745',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value >= 1000000) {
+                                        return '$' + (value / 1000000).toFixed(1) + 'M';
+                                    } else if (value >= 1000) {
+                                        return '$' + (value / 1000).toFixed(0) + 'K';
+                                    }
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    }
+                },
+            });
+        }
+        
+        function actualizarSidebarStats(stats) {
+            // Actualizar badge de pedidos
+            document.getElementById('pedidosBadge').textContent = stats.pedidosPendientes;
+            
+            // Actualizar contadores
+            document.getElementById('pendingOrdersCount').textContent = stats.pedidosPendientes;
+            document.getElementById('lowStockCount').textContent = sistema.obtenerProductosStockBajo().length;
+            
+            // Actualizar hora
+            const ahora = new Date();
+            document.getElementById('lastUpdate').textContent = 
+                `Última actualización: ${ahora.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'})}`;
+        }
+        
+        function loadOrders() {
+            if (!sistema) return;
+            
+            const estado = document.getElementById('filterEstado')?.value || 'todos';
+            const mesa = document.getElementById('filterMesa')?.value || 'todas';
+            const fecha = document.getElementById('filterFecha')?.value || new Date().toISOString().split('T')[0];
+
+            const pedidos = sistema.obtenerPedidos({
+                estado: estado,
+                mesa: mesa,
+                fecha: fecha
+            });
+            
+            const container = document.getElementById('pedidosContainer');
+            const noOrdersMessage = document.getElementById('noOrdersMessage');
+            
+            if (!container) return;
+            
+            // Actualizar estadísticas rápidas
+            const stats = sistema.obtenerEstadisticasHoy();
+            document.getElementById('statsPendientes').textContent = stats.pedidosPendientes;
+            document.getElementById('statsPreparacion').textContent = stats.pedidosPreparacion;
+            document.getElementById('statsListos').textContent = stats.pedidosListos;
+            document.getElementById('statsEntregados').textContent = sistema.pedidos.filter(p => 
+                p.estado === 'entregado' && p.fecha === new Date().toISOString().split('T')[0]
+            ).length;
+            
+            if (pedidos.length === 0) {
+                container.innerHTML = '';
+                if (noOrdersMessage) {
+                    noOrdersMessage.classList.remove('d-none');
+                    container.appendChild(noOrdersMessage);
+                }
+                return;
+            }
+            
+            if (noOrdersMessage) {
+                noOrdersMessage.classList.add('d-none');
+            }
+            
+            container.innerHTML = pedidos.map(pedido => crearTarjetaPedido(pedido)).join('');
+        }
+        
+        function crearTarjetaPedido(pedido) {
+            const configEstado = {
+                'pendiente': { clase: 'danger', texto: 'Pendiente', icono: 'fa-clock' },
+                'preparacion': { clase: 'warning', texto: 'En Preparación', icono: 'fa-utensils' },
+                'listo': { clase: 'success', texto: 'Listo', icono: 'fa-check-circle' },
+                'entregado': { clase: 'info', texto: 'Entregado', icono: 'fa-box' },
+                'cancelado': { clase: 'secondary', texto: 'Cancelado', icono: 'fa-times-circle' }
+            }[pedido.estado] || { clase: 'secondary', texto: 'Desconocido', icono: 'fa-question' };
+            
+            // Calcular tiempo transcurrido
+            const creado = new Date(pedido.tiempo_creacion);
+            const ahora = new Date();
+            const minutos = Math.floor((ahora - creado) / (1000 * 60));
+            
+            return `
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-${configEstado.clase} bg-opacity-10 border-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0 fw-bold">${pedido.numero}</h6>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>${pedido.hora} - Hace ${minutos} min
+                                    </small>
+                                </div>
+                                <span class="badge bg-${configEstado.clase}">
+                                    <i class="fas ${configEstado.icono} me-1"></i>${configEstado.texto}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-table text-primary fs-4 me-2"></i>
+                                <strong>Mesa #${pedido.mesa}</strong>
+                                <span class="ms-auto text-muted">${pedido.comensales} comensales</span>
+                            </div>
+                            <hr>
+                            <div class="mb-2">
+                                <small class="text-muted">Productos:</small>
+                                <ul class="list-unstyled mb-0 mt-2">
+                                    ${(pedido.productos || []).map(item => {
+                                        const producto = sistema.productos.find(p => p.id == item.productoId);
+                                        return `
+                                            <li class="mb-1">
+                                                <i class="fas fa-dot-circle text-primary" style="font-size: 0.5rem;"></i>
+                                                ${item.cantidad}x ${producto?.nombre || 'Producto'}
+                                                <small class="text-muted">($${((item.precio || 0) * (item.cantidad || 0)).toLocaleString()})</small>
+                                            </li>
+                                        `;
+                                    }).join('')}
+                                </ul>
+                                ${pedido.notas ? `
+                                    <div class="mt-2">
+                                        <small class="text-muted">Notas:</small>
+                                        <p class="mb-0 small">${pedido.notas}</p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <strong>Total:</strong>
+                                <strong class="text-primary fs-5">$${(pedido.total || 0).toLocaleString()}</strong>
+                            </div>
+                            <div class="d-grid gap-2">
+                                ${pedido.estado === 'pendiente' ? `
+                                    <button class="btn btn-primary btn-sm" onclick="cambiarEstadoPedido(${pedido.id}, 'preparacion')">
+                                        <i class="fas fa-play-circle me-1"></i>Iniciar Preparación
+                                    </button>
+                                ` : pedido.estado === 'preparacion' ? `
+                                    <button class="btn btn-primary btn-sm" onclick="cambiarEstadoPedido(${pedido.id}, 'listo')">
+                                        <i class="fas fa-check-circle me-1"></i>Marcar como Listo
+                                    </button>
+                                ` : pedido.estado === 'listo' ? `
+                                    <button class="btn btn-primary btn-sm" onclick="cambiarEstadoPedido(${pedido.id}, 'entregado')">
+                                        <i class="fas fa-box me-1"></i>Marcar como Entregado
+                                    </button>
+                                ` : ''}
+                                <button class="btn btn-outline-primary btn-sm" onclick="verDetallesPedido(${pedido.id})">
+                                    <i class="fas fa-eye me-1"></i>Ver Detalles
+                                </button>
+                                ${pedido.estado !== 'entregado' && pedido.estado !== 'cancelado' ? `
+                                    <button class="btn btn-outline-danger btn-sm" onclick="cancelarPedido(${pedido.id})">
+                                        <i class="fas fa-times me-1"></i>Cancelar
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function cambiarEstadoPedido(pedidoId, nuevoEstado) {
+            if (!sistema) return;
+            
+            const pedido = sistema.actualizarEstadoPedido(pedidoId, nuevoEstado);
+            if (pedido) {
+                showNotification(`Pedido ${pedido.numero} actualizado a: ${traducirEstado(nuevoEstado)}`, 'success');
+                loadOrders();
+                actualizarDashboard();
+            }
+        }
+        
+        function cancelarPedido(pedidoId) {
+            if (confirm('¿Estás seguro de que deseas cancelar este pedido?')) {
+                cambiarEstadoPedido(pedidoId, 'cancelado');
+            }
+        }
+        
+        function verDetallesPedido(pedidoId) {
+            const pedido = sistema.pedidos.find(p => p.id === pedidoId);
+            if (!pedido) return;
+            
+            const modalContent = `
+                <h5 class="mb-3">Detalles del Pedido</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Número:</strong> ${pedido.numero}</p>
+                        <p><strong>Mesa:</strong> #${pedido.mesa}</p>
+                        <p><strong>Comensales:</strong> ${pedido.comensales}</p>
+                        <p><strong>Mesero:</strong> ${pedido.mesero}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Fecha:</strong> ${pedido.fecha}</p>
+                        <p><strong>Hora:</strong> ${pedido.hora}</p>
+                        <p><strong>Estado:</strong> <span class="badge ${obtenerClaseEstado(pedido.estado)}">${traducirEstado(pedido.estado)}</span></p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <h6 class="mb-3">Productos:</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-center">Cantidad</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${(pedido.productos || []).map(item => {
+                                const producto = sistema.productos.find(p => p.id == item.productoId);
+                                const subtotal = (item.precio || 0) * (item.cantidad || 0);
+                                return `
+                                    <tr>
+                                        <td>${producto?.nombre || 'Producto'}</td>
+                                        <td class="text-center">${item.cantidad || 0}</td>
+                                        <td class="text-end">$${subtotal.toLocaleString()}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-active">
+                                <td colspan="2" class="text-end"><strong>TOTAL:</strong></td>
+                                <td class="text-end"><strong class="text-primary">$${(pedido.total || 0).toLocaleString()}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                ${pedido.notas ? `
+                    <hr>
+                    <h6 class="mb-2">Notas:</h6>
+                    <p class="bg-light p-3 rounded">${pedido.notas}</p>
+                ` : ''}
+            `;
+            
+            document.getElementById('orderDetailsContent').innerHTML = modalContent;
+            
+            const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
+            modal.show();
+        }
+        
+        function simularNuevoPedido() {
+            if (!sistema) return;
+            
+            const productosDisponibles = sistema.productos.filter(p => p.estado === 'disponible');
+            if (productosDisponibles.length === 0) {
+                showNotification('No hay productos disponibles para crear pedido', 'warning');
+                return;
+            }
+            
+            // Seleccionar 1-3 productos aleatorios
+            const numProductos = Math.floor(Math.random() * 3) + 1;
+            const productosSeleccionados = [];
+            let subtotal = 0;
+            
+            for (let i = 0; i < numProductos; i++) {
+                const producto = productosDisponibles[Math.floor(Math.random() * productosDisponibles.length)];
+                const cantidad = Math.floor(Math.random() * 3) + 1;
+                
+                productosSeleccionados.push({
+                    productoId: producto.id,
+                    nombre: producto.nombre,
+                    precio: producto.precio,
+                    cantidad: cantidad
+                });
+                
+                subtotal += producto.precio * cantidad;
+            }
+            
+            const impuestos = subtotal * 0.19;
+            const total = subtotal + impuestos;
+            
+            const nuevoPedido = {
+                mesa: Math.floor(Math.random() * 10) + 1,
+                comensales: Math.floor(Math.random() * 4) + 1,
+                productos: productosSeleccionados,
+                subtotal: subtotal,
+                impuestos: impuestos,
+                total: total,
+                notas: "Pedido de prueba generado automáticamente",
+                mesero: "Sistema"
+            };
+            
+            sistema.crearPedido(nuevoPedido);
+            
+            showNotification(`Pedido ${sistema.pedidos[0]?.numero || 'nuevo'} creado. Total: $${total.toLocaleString()}`, 'success');
+            
+            // Actualizar vista
+            actualizarDashboard();
+            loadOrders();
+        }
+        
+        function refreshOrders() {
+            loadOrders();
+            showNotification('Pedidos actualizados', 'success');
+        }
+        
+        function filterOrders() {
+            loadOrders();
+        }
+        
+        function loadProducts() {
+            if (!sistema) return;
+            
+            const tbody = document.getElementById('productsTableBody');
+            if (!tbody) return;
+            
+            const productos = sistema.productos;
+            
+            if (productos.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No hay productos</h5>
+                            <p class="text-muted">Agrega productos para comenzar</p>
+                            <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                                <i class="fas fa-plus me-1"></i> Agregar Producto
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = productos.map(producto => `
+                <tr>
+                    <td>
+                        <div style="width: 60px; height: 60px; background-color: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-utensils text-muted"></i>
+                        </div>
+                    </td>
+                    <td>
+                        <strong>${producto.nombre}</strong>
+                        <br>
+                        <small class="text-muted">${producto.descripcion || 'Sin descripción'}</small>
+                        <br>
+                        <small class="text-muted">SKU: ${producto.sku || 'N/A'}</small>
+                    </td>
+                    <td>
+                        <span class="badge bg-primary">${producto.categoria}</span>
+                    </td>
+                    <td><strong>$${producto.precio.toLocaleString()}</strong></td>
+                    <td>
+                        <span class="badge ${producto.estado === 'disponible' ? 'bg-success' : 'bg-danger'}">
+                            ${producto.estado === 'disponible' ? 'Disponible' : 'Agotado'}
+                        </span>
+                        <br>
+                        <small class="text-muted">Stock: ${producto.stock || 0}</small>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" title="Eliminar" onclick="eliminarProducto(${producto.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function eliminarProducto(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+                // En un sistema real, aquí eliminarías el producto
+                showNotification('Producto eliminado (simulación)', 'success');
+                loadProducts();
+            }
+        }
+        
+        function loadLowStockProducts() {
+            if (!sistema) return;
+            
+            const productosBajos = sistema.obtenerProductosStockBajo();
+            const tbody = document.getElementById('lowStockTableBody');
+            
+            if (!tbody) return;
+            
+            if (productosBajos.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-4">
+                            <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
+                            <p class="text-muted mb-0">Todos los productos tienen stock suficiente</p>
+                        </td>
+                    </tr>
+                `;
+                
+                document.getElementById('lowStockMessage').innerHTML = 'Todos los productos tienen stock suficiente';
+                document.getElementById('lowStockAlert').className = 'alert alert-success';
+            } else {
+                tbody.innerHTML = productosBajos.map(producto => `
+                    <tr>
+                        <td>
+                            <strong>${producto.nombre}</strong>
+                            <br>
+                            <small class="text-muted">${producto.sku || 'N/A'}</small>
+                        </td>
+                        <td>
+                            <span class="badge ${producto.stock < 3 ? 'bg-danger' : 'bg-warning'}">
+                                ${producto.stock} unidades
+                            </span>
+                        </td>
+                        <td>${producto.stock_minimo || 5} unidades</td>
+                        <td>
+                            <span class="badge ${producto.stock === 0 ? 'bg-danger' : 'bg-warning'}">
+                                ${producto.stock === 0 ? 'Agotado' : 'Stock Bajo'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-plus me-1"></i> Reponer
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                document.getElementById('lowStockMessage').innerHTML = 
+                    `${productosBajos.length} productos requieren atención inmediata`;
+                document.getElementById('lowStockAlert').className = 'alert alert-warning';
+            }
+        }
+        
+        // ==================== FUNCIONES DE UTILIDAD ====================
+        
+        function obtenerClaseEstado(estado) {
+            const clases = {
+                'pendiente': 'bg-danger',
+                'preparacion': 'bg-warning',
+                'listo': 'bg-success',
+                'entregado': 'bg-info',
+                'cancelado': 'bg-secondary'
+            };
+            return clases[estado] || 'bg-secondary';
+        }
+        
+        function traducirEstado(estado) {
+            const traducciones = {
+                'pendiente': 'Pendiente',
+                'preparacion': 'En Preparación',
+                'listo': 'Listo',
+                'entregado': 'Entregado',
+                'cancelado': 'Cancelado'
+            };
+            return traducciones[estado] || estado;
+        }
+        
+        function showNotification(mensaje, tipo = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${tipo} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideInRight 0.3s ease-out;
+            `;
+            
+            const iconos = {
+                'success': 'fa-check-circle',
+                'error': 'fa-exclamation-circle',
+                'warning': 'fa-exclamation-triangle',
+                'info': 'fa-info-circle'
+            };
+            
+            notification.innerHTML = `
+                <i class="fas ${iconos[tipo] || 'fa-info-circle'} me-2"></i>
+                ${mensaje}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+        
+        // ==================== FUNCIONES DE DEMOSTRACIÓN ====================
+        
+        function exportData() {
+            showNotification('Datos exportados exitosamente', 'success');
+        }
+        
+        function showTodaySummary() {
+            if (!sistema) return;
+            
+            const stats = sistema.obtenerEstadisticasHoy();
+            alert(`Resumen del día:\n\n• Pedidos hoy: ${stats.pedidosHoy}\n• Ventas: $${stats.ventasHoy.toLocaleString()}\n• Mesas ocupadas: ${stats.mesasOcupadas}/20\n• Productos activos: ${stats.productosActivos}\n\n¡Excelente trabajo!`);
+        }
+        
+        function exportMenu() {
+            showNotification('Menú exportado exitosamente', 'success');
+        }
+        
+        function exportInventory() {
+            showNotification('Inventario exportado exitosamente', 'success');
+        }
+        
+        function generateInventoryReport() {
+            showNotification('Reporte de inventario generado', 'success');
+        }
+        
+        function generateReport(tipo) {
+            showNotification(`Reporte ${tipo} generado exitosamente`, 'success');
+        }
+        
+        function customReport() {
+            alert('Configuración de reporte personalizado\n\n(Esta funcionalidad se implementaría completamente en un sistema real)');
+        }
+        
+        function printOrder() {
+            window.print();
+        }
+        
+        // Agregar animación CSS para notificaciones
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Agrega esto al final del script en admin.html
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar sistema
+    sistema = inicializarSistema();
+    
+    // Verificar autenticación
+    if (!localStorage.getItem('isAdminLoggedIn')) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Sincronizar pedidos inmediatamente
+    setTimeout(() => {
+        sincronizarPedidosExternos();
+    }, 1000);
+    
+    // Configurar auto-sincronización cada 10 segundos
+    setInterval(() => {
+        sincronizarPedidosExternos();
+    }, 10000);
+    
+    
+});
+    </script>
+</body>
+</html>

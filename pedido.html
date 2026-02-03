@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Estado del pedido - Restaurante SENA">
+    <title>Estado del Pedido - Restaurante SENA</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shop"></i>
+                <span>Restaurante SENA</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="menu.html">Menú</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="carrito.html">
+                            <i class="bi bi-cart3 fs-5"></i> Carrito
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="pedido.html">
+                            <i class="bi bi-clock-history"></i> Mi Pedido
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header del Pedido -->
+    <header class="order-header">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="order-title">
+                    <i class="bi bi-clock-history me-3"></i>Seguimiento de Pedido
+                </h1>
+                <p class="order-subtitle">
+                    Revisa el estado de tu pedido en tiempo real
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="py-4">
+        <div class="container">
+
+            <!-- Mensaje si no hay pedido -->
+            <div id="noOrderMessage" class="text-center py-5" style="display: none;">
+                <i class="bi bi-cart-x display-1 text-muted mb-4"></i>
+                <h3 class="fw-bold mb-3">No hay pedidos activos</h3>
+                <p class="text-muted mb-4">
+                    Parece que no tienes ningún pedido en curso.
+                </p>
+                <a href="menu.html" class="btn btn-primary btn-lg">
+                    <i class="bi bi-list-ul me-2"></i>Ver Menú
+                </a>
+            </div>
+
+            <!-- Información del Pedido -->
+            <div id="orderContent" style="display: none;">
+                <!-- Información básica -->
+                <div class="order-info-card mb-4">
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <div class="info-badge">
+                                <div class="info-icon">
+                                    <i class="bi bi-hash"></i>
+                                </div>
+                                <div class="info-label">Número de Pedido</div>
+                                <h3 class="info-value" id="orderNumber">ORD-0000</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-badge">
+                                <div class="info-icon">
+                                    <i class="bi bi-table"></i>
+                                </div>
+                                <div class="info-label">Mesa</div>
+                                <h3 class="info-value" id="tableNumber">5</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-badge">
+                                <div class="info-icon">
+                                    <i class="bi bi-clock"></i>
+                                </div>
+                                <div class="info-label">Hora del Pedido</div>
+                                <h3 class="info-value" id="orderTime">00:00</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-badge">
+                                <div class="info-icon">
+                                    <i class="bi bi-stopwatch"></i>
+                                </div>
+                                <div class="info-label">Tiempo Estimado</div>
+                                <h3 class="info-value" id="estimatedTime">20 min</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de progreso -->
+                <div class="progress-tracker mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <span class="status-badge preparing" id="statusBadge">
+                                <i class="bi bi-arrow-repeat rotating"></i>
+                                <span>En Preparación</span>
+                            </span>
+                            <p class="text-muted mb-0" id="statusText">
+                                Tu pedido está siendo preparado por nuestro chef
+                            </p>
+                        </div>
+                        <div class="text-end">
+                            <p class="text-primary fw-bold mb-0" id="timeRemaining">Tiempo restante: 15 min</p>
+                        </div>
+                    </div>
+
+                    <!-- Línea de tiempo -->
+                    <div class="timeline-container">
+                        <div class="timeline-line"></div>
+                        <div class="timeline-progress" id="timelineProgress"></div>
+
+                        <div class="timeline-steps">
+                            <!-- Paso 1: Recibido -->
+                            <div class="timeline-step">
+                                <div class="step-icon completed">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="step-label">Recibido</div>
+                                <div class="step-time" id="step1Time">00:00</div>
+                            </div>
+
+                            <!-- Paso 2: En Preparación -->
+                            <div class="timeline-step">
+                                <div class="step-icon active pulse">
+                                    <i class="bi bi-arrow-repeat rotating"></i>
+                                </div>
+                                <div class="step-label">En Preparación</div>
+                                <div class="step-time" id="step2Time">En progreso</div>
+                            </div>
+
+                            <!-- Paso 3: Listo -->
+                            <div class="timeline-step">
+                                <div class="step-icon">
+                                    <i class="bi bi-check2-circle"></i>
+                                </div>
+                                <div class="step-label">Listo</div>
+                                <div class="step-time" id="step3Time">Pendiente</div>
+                            </div>
+
+                            <!-- Paso 4: Entregado -->
+                            <div class="timeline-step">
+                                <div class="step-icon">
+                                    <i class="bi bi-truck"></i>
+                                </div>
+                                <div class="step-label">Entregado</div>
+                                <div class="step-time" id="step4Time">Pendiente</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notificación -->
+                    <div class="notification-card mt-4">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-bell-fill text-success fs-4 me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">Actualizaciones en tiempo real</h6>
+                                <p class="mb-0 text-muted">
+                                    Te notificaremos cuando tu pedido esté listo.
+                                    <strong>Mantén esta página abierta</strong> para recibir actualizaciones.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Detalles del pedido -->
+                    <div class="col-lg-7 mb-4">
+                        <div class="order-details-card">
+                            <h3 class="fw-bold mb-4">
+                                <i class="bi bi-bag-check me-2 text-success"></i>Detalle del Pedido
+                            </h3>
+
+                            <!-- Lista de productos -->
+                            <div id="orderItemsList">
+                                <!-- Los items se cargarán dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resumen de pago -->
+                    <div class="col-lg-5 mb-4">
+                        <div class="payment-summary">
+                            <h3 class="fw-bold mb-4">
+                                <i class="bi bi-receipt me-2 text-success"></i>Resumen de Pago
+                            </h3>
+
+                            <!-- Detalles del pago -->
+                            <div class="mb-3">
+                                <div class="summary-row">
+                                    <span class="summary-label">Subtotal:</span>
+                                    <span class="summary-value" id="subtotalSummary">$0</span>
+                                </div>
+
+                                <div class="summary-row">
+                                    <span class="summary-label">Propina (15%):</span>
+                                    <span class="summary-value" id="tipSummary">$0</span>
+                                </div>
+
+                                <div class="summary-row">
+                                    <span class="summary-label">IVA (19%):</span>
+                                    <span class="summary-value" id="taxSummary">$0</span>
+                                </div>
+                            </div>
+
+                            <!-- Total -->
+                            <div class="summary-row total">
+                                <span class="summary-label">Total a pagar:</span>
+                                <span class="summary-value total" id="totalSummary">$0</span>
+                            </div>
+
+                            <!-- Métodos de pago -->
+                            <div class="mt-4 pt-3 border-top">
+                                <p class="fw-bold mb-2">
+                                    <i class="bi bi-credit-card me-1"></i>Métodos de pago aceptados:
+                                </p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="bi bi-cash me-1"></i> Efectivo
+                                    </span>
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="bi bi-credit-card me-1"></i> Tarjeta
+                                    </span>
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="bi bi-phone me-1"></i> Digital
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Información adicional -->
+                            <div class="alert alert-success mt-4 mb-0">
+                                <small>
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    El pago se realiza al recibir el pedido en tu mesa
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="action-buttons">
+                    <button class="action-btn primary" onclick="callWaiter()">
+                        <i class="bi bi-bell-fill"></i>
+                        Llamar al Mesero
+                    </button>
+                    <button class="action-btn secondary" onclick="viewReceipt()">
+                        <i class="bi bi-receipt"></i>
+                        Ver Factura
+                    </button>
+                    <a href="menu.html" class="action-btn secondary">
+                        <i class="bi bi-plus-circle"></i>
+                        Agregar Más
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript del pedido -->
+    <script src="js/pedido.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1437 @@
+/* ============================================
+   RESTAURANTE SENA - ESTILOS PERSONALIZADOS
+   ============================================ */
+
+/* Variables CSS para mantener consistencia */
+:root {
+    --primary-color: #39a900;
+    --primary-dark: #2d8400;
+    --secondary-color: #6c757d;
+    --success-color: #39a900;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --light-bg: #f8f9fa;
+    --dark-bg: #212529;
+    --white: #ffffff;
+    --text-dark: #212529;
+    --text-muted: #6c757d;
+    --border-radius: 12px;
+    --transition-speed: 0.3s;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: #f5f7fa;
+    overflow-x: hidden;
+}
+
+/* ============================================
+   NAVBAR MEJORADO
+   ============================================ */
+
+.navbar {
+    padding: 1rem 0;
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(10px);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    transition: transform var(--transition-speed);
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+}
+
+.navbar-brand i {
+    background: linear-gradient(135deg, #fff 0%, #e3f2fd 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: all var(--transition-speed);
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: white;
+    transition: all var(--transition-speed);
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 60%;
+}
+
+/* ============================================
+   HERO SECTION MEJORADO
+   ============================================ */
+
+.hero-section {
+    background: linear-gradient(135deg, #39a900 0%, #2d8400 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 4rem 0;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.05" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+    background-size: cover;
+    background-position: bottom;
+    opacity: 0.5;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-section h1 {
+    color: white;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.hero-section .lead {
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    animation: fadeInUp 1s ease-out;
+}
+
+.hero-section img {
+    animation: fadeInRight 1s ease-out;
+    border-radius: var(--border-radius);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+/* Botones mejorados */
+.btn {
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all var(--transition-speed);
+    border: none;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(57, 169, 0, 0.4);
+}
+
+.btn-outline-primary {
+    border: 2px solid white;
+    color: white;
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: white;
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.btn-lg {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   SECCIONES DE CARACTERÍSTICAS
+   ============================================ */
+
+.features-section {
+    padding: 5rem 0;
+    background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+}
+
+.features-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: var(--text-dark);
+    position: relative;
+    display: inline-block;
+}
+
+.features-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+    border-radius: 2px;
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #39a900 0%, #2d8400 100%);
+    border-radius: 20px;
+    transition: all var(--transition-speed);
+}
+
+.feature-icon i {
+    color: white !important;
+}
+
+.card:hover .feature-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.card {
+    border-radius: var(--border-radius);
+    transition: all var(--transition-speed);
+    border: none;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ============================================
+   CÓMO FUNCIONA
+   ============================================ */
+
+.how-it-works {
+    padding: 5rem 0;
+    background: white;
+}
+
+.step-number {
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-speed);
+}
+
+.how-it-works .col-md-3:hover .step-number {
+    transform: scale(1.2);
+    box-shadow: 0 8px 20px rgba(57, 169, 0, 0.4);
+}
+
+.how-it-works h5 {
+    color: var(--text-dark);
+    margin: 1rem 0 0.5rem;
+    font-weight: 700;
+}
+
+.how-it-works p {
+    color: var(--text-muted);
+}
+
+/* ============================================
+   MENÚ - HERO SECTION
+   ============================================ */
+
+.menu-hero {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 3rem 0;
+}
+
+.menu-hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+}
+
+/* Barra de búsqueda mejorada */
+.input-group {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.input-group-text {
+    border: none;
+    background: white;
+}
+
+.form-control {
+    border: none;
+    padding: 1rem;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    background: #f8f9fa;
+}
+
+/* ============================================
+   FILTROS DE CATEGORÍAS
+   ============================================ */
+
+.categories-section {
+    background: white;
+}
+
+#categoryFilters .btn {
+    white-space: nowrap;
+    border-radius: 50px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+#categoryFilters .btn.active {
+    background: linear-gradient(135deg, #39a900 0%, #2d8400 100%);
+    box-shadow: 0 4px 12px rgba(57, 169, 0, 0.3);
+}
+
+/* ============================================
+   PRODUCTOS - TARJETAS
+   ============================================ */
+
+.product-card {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: all var(--transition-speed);
+    height: 100%;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+}
+
+.product-card img {
+    transition: transform var(--transition-speed);
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-card:hover img {
+    transform: scale(1.1);
+}
+
+.product-card .card-title {
+    color: var(--text-dark);
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-card .card-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.badge {
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+}
+
+/* ============================================
+   CARRITO FLOTANTE
+   ============================================ */
+
+.floating-cart-btn a {
+    background: linear-gradient(135deg, var(--success-color) 0%, #0f5132 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-speed);
+    z-index: 9999;
+}
+
+.floating-cart-btn a:hover {
+    transform: scale(1.15);
+    box-shadow: 0 10px 30px rgba(57, 169, 0, 0.4);
+}
+
+.floating-cart-btn .badge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.5rem;
+}
+
+/* ============================================
+   CARRITO - PÁGINA
+   ============================================ */
+
+.cart-item {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-speed);
+}
+
+.cart-item:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.cart-item img {
+    border-radius: 8px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quantity-controls button {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: var(--light-bg);
+    color: var(--text-dark);
+    font-weight: 600;
+    transition: all var(--transition-speed);
+}
+
+.quantity-controls button:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.quantity-controls span {
+    min-width: 40px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+footer {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+}
+
+footer h5 {
+    color: white;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+footer a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: all var(--transition-speed);
+}
+
+footer a:hover {
+    color: white;
+    transform: translateX(5px);
+}
+
+footer .bi {
+    transition: all var(--transition-speed);
+}
+
+footer a:hover .bi {
+    transform: scale(1.2);
+}
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+/* ============================================
+   UTILIDADES
+   ============================================ */
+
+.bg-gradient {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.shadow-custom {
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .menu-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .features-section h2 {
+        font-size: 2rem;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    #categoryFilters {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #categoryFilters::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .product-card img {
+        height: 180px;
+    }
+    
+    .cart-item img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* ============================================
+   ESTADOS DE PEDIDO
+   ============================================ */
+
+.order-status {
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    background: white;
+    box-shadow: var(--shadow-md);
+}
+
+.status-badge {
+    font-size: 1.2rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    display: inline-block;
+    margin: 1rem 0;
+}
+
+.status-badge.recibido {
+    background: linear-gradient(135deg, #0dcaf0 0%, #0891b2 100%);
+    color: white;
+}
+
+.status-badge.preparando {
+    background: linear-gradient(135deg, #ffc107 0%, #f59e0b 100%);
+    color: white;
+}
+
+.status-badge.listo {
+    background: linear-gradient(135deg, #198754 0%, #059669 100%);
+    color: white;
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.spinner-border-custom {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3em;
+}
+
+/* ============================================
+   MEJORAS DE ACCESIBILIDAD
+   ============================================ */
+
+.btn:focus,
+.form-control:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Alto contraste para mejor legibilidad */
+.high-contrast {
+    filter: contrast(1.2);
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    .navbar, footer, .floating-cart-btn {
+        display: none;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #dee2e6;
+    }
+}
+/* ============================================
+   PEDIDO - ESTILOS ESPECÍFICOS
+   ============================================ */
+
+/* Header del pedido */
+.order-header {
+    background: linear-gradient(135deg, rgba(57, 169, 0, 0.95), rgba(45, 132, 0, 0.95));
+    color: white;
+    padding: 4rem 0 3rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.order-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 80%, transparent 30%, rgba(0,0,0,0.2) 100%);
+}
+
+.order-title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.order-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    position: relative;
+}
+
+/* Información del pedido */
+.order-info-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border: 2px solid var(--primary-color);
+    margin-top: -3rem;
+    position: relative;
+    z-index: 10;
+}
+
+.info-badge {
+    background: var(--light-bg);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    height: 100%;
+    transition: all var(--transition-speed);
+}
+
+.info-badge:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(57, 169, 0, 0.15);
+}
+
+.info-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.8rem;
+}
+
+.info-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+/* Barra de progreso */
+.progress-tracker {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    margin-bottom: 3rem;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.preparing {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-badge.ready {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.delivered {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+/* Línea de tiempo */
+.timeline-container {
+    position: relative;
+    padding: 2rem 0;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--light-bg);
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.timeline-progress {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+    transform: translateY(-50%);
+    z-index: 2;
+    transition: width var(--transition-speed);
+}
+
+.timeline-steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 3;
+}
+
+.timeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    flex: 1;
+}
+
+.step-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid var(--light-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+    color: var(--text-muted);
+    transition: all var(--transition-speed);
+    position: relative;
+    z-index: 4;
+}
+
+.step-icon.active {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(57, 169, 0, 0.3);
+}
+
+.step-icon.completed {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+}
+
+.step-label {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+}
+
+.step-time {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Detalles del pedido */
+.order-details-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    margin-bottom: 3rem;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--light-bg);
+    transition: all var(--transition-speed);
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-item:hover {
+    background: var(--light-bg);
+    border-radius: 10px;
+}
+
+.item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 1.5rem;
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-dark);
+}
+
+.item-price {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-right: 2rem;
+}
+
+.quantity-badge {
+    background: var(--light-bg);
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 700;
+    min-width: 50px;
+    text-align: center;
+}
+
+.item-total {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    min-width: 120px;
+    text-align: right;
+}
+
+/* Resumen de pago */
+.payment-summary {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--light-bg);
+}
+
+.summary-row.total {
+    border-bottom: none;
+    border-top: 2px solid var(--light-bg);
+    margin-top: 1rem;
+}
+
+.summary-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.summary-value {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.summary-value.total {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.action-btn {
+    flex: 1;
+    min-width: 200px;
+    padding: 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    transition: all var(--transition-speed);
+    border: none;
+    cursor: pointer;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    box-shadow: 0 8px 20px rgba(57, 169, 0, 0.3);
+}
+
+.action-btn.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(57, 169, 0, 0.4);
+}
+
+.action-btn.secondary {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.action-btn.secondary:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* Notificaciones */
+.notification-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+/* Animaciones para el pedido */
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.rotating {
+    animation: rotate 2s linear infinite;
+}
+
+/* Responsive para pedido */
+@media (max-width: 768px) {
+    .order-title {
+        font-size: 2.2rem;
+    }
+    
+    .order-header {
+        padding: 3rem 0 2rem;
+    }
+    
+    .order-info-card {
+        margin-top: -2rem;
+    }
+    
+    .timeline-steps {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    .timeline-line {
+        top: 0;
+        bottom: 0;
+        left: 30px;
+        right: auto;
+        width: 4px;
+        height: auto;
+        transform: none;
+    }
+    
+    .timeline-progress {
+        top: 0;
+        left: 30px;
+        width: 4px;
+        height: auto;
+        transform: none;
+    }
+    
+    .timeline-step {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        gap: 1rem;
+    }
+    
+    .step-icon {
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+    
+    .item-quantity {
+        margin-right: 1rem;
+    }
+    
+    .action-btn {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .order-title {
+        font-size: 1.8rem;
+    }
+    
+    .info-value {
+        font-size: 1.5rem;
+    }
+}
+/* ============================================
+   FACTURA - ESTILOS ESPECÍFICOS
+   ============================================ */
+
+/* Contenedor principal */
+.invoice-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* Encabezado de factura */
+.invoice-header {
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.invoice-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.invoice-subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Información de factura */
+.invoice-info-card {
+    background: var(--light-bg);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.invoice-qr-container {
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+/* Tabla de factura */
+.invoice-table th {
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 1rem;
+}
+
+.invoice-table td {
+    vertical-align: middle;
+    border-color: var(--light-bg);
+    padding: 1rem;
+}
+
+.invoice-table tbody tr:hover {
+    background: rgba(57, 169, 0, 0.05);
+}
+
+/* Totales */
+.invoice-totals {
+    background: var(--light-bg);
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+.total-row {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Métodos de pago */
+.payment-methods {
+    background: white;
+    border: 2px dashed var(--light-bg);
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+/* Estilos para impresión */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 12pt;
+    }
+    
+    .invoice-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border: none;
+    }
+    
+    .invoice-header {
+        border-bottom: 2px solid black;
+    }
+    
+    .invoice-table th {
+        background: black !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .action-buttons {
+        display: none !important;
+    }
+    
+    .payment-methods {
+        border: 1px solid #ccc;
+    }
+}
+
+/* Responsive para factura */
+@media (max-width: 768px) {
+    .invoice-title {
+        font-size: 2rem;
+    }
+    
+    .invoice-container {
+        padding: 1rem;
+    }
+    
+    .invoice-table {
+        font-size: 0.9rem;
+    }
+    
+    .invoice-table th,
+    .invoice-table td {
+        padding: 0.75rem 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .invoice-title {
+        font-size: 1.5rem;
+    }
+    
+    .invoice-subtitle {
+        font-size: 1rem;
+    }
+}
+/* ============================================
+   PANEL ADMINISTRATIVO - CORRECCIÓN DE COLORES
+   ============================================ */
+
+/* Corregir colores azules a verde SENA */
+.bg-primary, .btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color) !important;
+    color: white !important;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+/* Badges */
+.badge.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.badge.bg-success {
+    background-color: var(--success-color) !important;
+}
+
+/* Progress bars */
+.progress-bar {
+    background-color: var(--primary-color) !important;
+}
+
+/* Tablas */
+.table thead th {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Modales */
+.modal-header.bg-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+}
+
+/* Charts */
+.chartjs-render-monitor {
+    border-color: var(--primary-color) !important;
+}
+
+/* Navbar admin */
+.navbar-dark.bg-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+}
+
+/* Sidebar */
+.sidebar .nav-link.active {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(57, 169, 0, 0.1) !important;
+    color: var(--primary-color) !important;
+}
+
+/* Cards con borde verde */
+.card.border-primary {
+    border-color: var(--primary-color) !important;
+}
+
+/* List group */
+.list-group-item.active {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Form controls focus */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(57, 169, 0, 0.25) !important;
+}
+
+/* Pagination */
+.page-item.active .page-link {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.page-link {
+    color: var(--primary-color) !important;
+}
+
+/* Alertas con verde */
+.alert-success {
+    background-color: rgba(57, 169, 0, 0.1) !important;
+    border-color: var(--primary-color) !important;
+    color: #0f5132 !important;
+}
+
+/* Status badges */
+.bg-success {
+    background-color: var(--success-color) !important;
+}
+
+/* Background colors con opacidad */
+.bg-primary.bg-opacity-10 {
+    background-color: rgba(57, 169, 0, 0.1) !important;
+}
+
+.bg-success.bg-opacity-10 {
+    background-color: rgba(57, 169, 0, 0.1) !important;
+}
+
+/* Estadísticas rápidas */
+.card.bg-primary.bg-opacity-10 {
+    border-left: 4px solid var(--primary-color) !important;
+}
+
+.card.bg-success.bg-opacity-10 {
+    border-left: 4px solid var(--success-color) !important;
+}
+
+.card.bg-warning.bg-opacity-10 {
+    border-left: 4px solid var(--warning-color) !important;
+}
+
+.card.bg-danger.bg-opacity-10 {
+    border-left: 4px solid var(--danger-color) !important;
+}
+
+/* Botones de acción en pedidos */
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #237000 100%) !important;
+    transform: translateY(-2px);
+}

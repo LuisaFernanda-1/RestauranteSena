@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Menú digital del Restaurante SENA - Sistema de pedidos QR">
+    <title>Menú Digital - Restaurante SENA</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --verde-sena: #39a900;
+            --verde-oscuro: #2d8400;
+            --verde-claro: #4bc90d;
+            --gris-claro: #f8f9fa;
+            --gris-medio: #e9ecef;
+            --gris-oscuro: #495057;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff;
+            color: #333;
+        }
+        
+        /* Navbar consistente con la página principal */
+        .navbar-custom {
+            background: white !important;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--verde-sena) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .navbar-brand i {
+            font-size: 2rem;
+        }
+        
+        .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: var(--verde-sena) !important;
+        }
+        
+        .nav-link.active {
+            color: var(--verde-sena) !important;
+            font-weight: 600;
+        }
+        
+        .cart-badge {
+            font-size: 0.7rem;
+            margin-left: -5px;
+        }
+        
+        /* Header del menú */
+        .menu-header {
+            background: linear-gradient(135deg, rgba(57, 169, 0, 0.95), rgba(45, 132, 0, 0.95)), 
+                        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=400&fit=crop');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0 3rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.3) 100%);
+        }
+        
+        .menu-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .menu-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        /* Información de mesa - ESTILO MEJORADO */
+        .table-info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: -3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 3px solid var(--verde-sena);
+            position: relative;
+            z-index: 10;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .table-info-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .table-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--verde-sena);
+            margin: 0;
+            text-align: center;
+        }
+        
+        .change-table-btn {
+            background: var(--verde-sena);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .change-table-btn:hover {
+            background: var(--verde-oscuro);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(57, 169, 0, 0.3);
+        }
+        
+        /* Filtros de categoría - ESTILO MEJORADO */
+        .category-filters {
+            background: var(--gris-claro);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .filter-btn {
+            background: white;
+            border: 2px solid var(--gris-medio);
+            color: var(--gris-oscuro);
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            margin: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover {
+            background: var(--verde-claro);
+            color: white;
+            border-color: var(--verde-claro);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(57, 169, 0, 0.3);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--verde-sena), var(--verde-oscuro));
+            color: white;
+            border-color: var(--verde-sena);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(57, 169, 0, 0.3);
+        }
+        
+        /* Barra de búsqueda */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+        
+        .search-input {
+            border-radius: 50px;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--gris-medio);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            border-color: var(--verde-sena);
+            box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.1);
+        }
+        
+        /* Secciones de categoría */
+        .category-section {
+            margin-bottom: 4rem;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .category-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--verde-sena);
+            display: inline-block;
+        }
+        
+        /* Tarjetas de producto */
+        .product-card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(57, 169, 0, 0.2);
+        }
+        
+        .product-image {
+            height: 220px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.5s;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 2;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 220px);
+        }
+        
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        
+        .product-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+        
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+        
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--verde-sena);
+            margin: 0;
+        }
+        
+        .add-to-cart-btn {
+            background: linear-gradient(135deg, var(--verde-sena), var(--verde-oscuro));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 0.7rem 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(57, 169, 0, 0.4);
+            color: white;
+        }
+        
+        .add-to-cart-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Info de tiempo de preparación */
+        .prep-time {
+            font-size: 0.85rem;
+            color: var(--gris-oscuro);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* Botón flotante del carrito */
+        .floating-cart-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        .floating-cart-btn .btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--verde-sena), var(--verde-oscuro));
+            border: none;
+            box-shadow: 0 10px 30px rgba(57, 169, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .floating-cart-btn .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(57, 169, 0, 0.5);
+        }
+        
+        .floating-cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            min-width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Notificación Toast */
+        .toast-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            animation: slideInRight 0.3s ease;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Footer */
+        .footer-custom {
+            background: #1a1a1a;
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 5rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-title {
+                font-size: 2.5rem;
+            }
+            
+            .menu-header {
+                padding: 4rem 0 2rem;
+            }
+            
+            .table-info-card {
+                margin-top: -2rem;
+                padding: 1rem;
+            }
+            
+            .filter-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .category-title {
+                font-size: 1.6rem;
+            }
+            
+            .product-image {
+                height: 180px;
+            }
+            
+            .floating-cart-btn {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .floating-cart-btn .btn {
+                width: 60px;
+                height: 60px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .menu-title {
+                font-size: 2rem;
+            }
+            
+            .filter-btn {
+                width: calc(50% - 1rem);
+                margin: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shop"></i>
+                <span>Restaurante SENA</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="menu.html">Menú</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="carrito.html">
+                            <i class="bi bi-cart3 fs-5"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge" 
+                                  id="cartBadge">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pedido.html">
+                            <i class="bi bi-clock-history"></i> Mi Pedido
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header del Menú -->
+    <header class="menu-header">
+        <div class="container text-center">
+            <h1 class="menu-title">
+                <i class="bi bi-list-ul me-3"></i>Menú Digital
+            </h1>
+            <p class="menu-subtitle">
+                Explora nuestra deliciosa selección de platos. Cada platillo es preparado con ingredientes frescos y mucho amor.
+            </p>
+        </div>
+    </header>
+
+    <!-- Información de Mesa - MEJORADO -->
+    <div class="container">
+        <div class="table-info-card">
+            <div class="text-center">
+                <p class="table-info-label">
+                    <i class="bi bi-table"></i> Número de Mesa
+                </p>
+                <h2 class="table-number mb-3" id="tableNumberDisplay">5</h2>
+                <button class="btn change-table-btn mx-auto" onclick="showTableModal()">
+                    <i class="bi bi-pencil"></i>Cambiar Mesa
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <main class="py-4">
+        <div class="container">
+            
+            <!-- Barra de Búsqueda -->
+            <div class="search-container">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-search text-muted"></i>
+                    </span>
+                    <input type="text" 
+                           class="form-control search-input border-start-0" 
+                           id="searchInput" 
+                           placeholder="Buscar platos, ingredientes..."
+                           oninput="searchProducts()">
+                </div>
+            </div>
+
+            <!-- Filtros de Categoría - TODOS FUNCIONALES -->
+            <div class="category-filters text-center">
+                <div class="d-flex flex-wrap justify-content-center">
+                    <button class="filter-btn active" onclick="filterCategory('todos')">
+                        <i class="bi bi-grid-3x3-gap me-2"></i>Todos
+                    </button>
+                    <button class="filter-btn" onclick="filterCategory('entradas')">
+                        <i class="bi bi-egg-fried me-2"></i>Entradas
+                    </button>
+                    <button class="filter-btn" onclick="filterCategory('platos-fuertes')">
+                        <i class="bi bi-fire me-2"></i>Platos Fuertes
+                    </button>
+                    <button class="filter-btn" onclick="filterCategory('bebidas')">
+                        <i class="bi bi-cup-straw me-2"></i>Bebidas
+                    </button>
+                    <button class="filter-btn" onclick="filterCategory('postres')">
+                        <i class="bi bi-heart-fill me-2"></i>Postres
+                    </button>
+                    <button class="filter-btn" onclick="filterCategory('especiales')">
+                        <i class="bi bi-star-fill me-2"></i>Especiales
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sección: TODOS LOS PLATOS (visible por defecto) -->
+            <div class="category-section" data-category="todos">
+                <h2 class="category-title">
+                    <i class="bi bi-grid-3x3-gap me-2"></i>Todos los Platos
+                </h2>
+                <div class="row g-4">
+                    
+                    <!-- Entradas (3 productos) -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 product-item" data-name="sopa de pollo" data-category="entradas">
+                        <div class="card product-card">
+                            <div class="position-relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&h=250&fit=crop&auto=format" 
+                                     class="product-image" alt="Sopa de Pollo">
+                                <span class="badge bg-success product-badge">
+                                    <i class="bi bi-check-circle me-1"></i>Entrada
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="product-title">Sopa de Pollo Casera</h5>
+                                </div>
+                                <p class="product-description">
+                                    Caldo de pollo con verduras frescas, fideos y cilantro. Reconfortante y deliciosa.
+                                </p>
+                                <div class="prep-time">
+                                    <i class="bi bi-clock"></i>
+                                    <span>Tiempo: 10-15 min</span>
+                                </div>
+                                <div class="product-footer">
+                                    <h4 class="product-price">$12.000</h4>
+                                    <button class="btn add-to-cart-btn" 
+                                            onclick="addToCart(9, 'Sopa de Pollo Casera', 12000, 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=100&h=100&fit=crop')">
+                                        <i class="bi bi-cart-plus"></i>
+                                        <span class="d-none d-md-inline">Agregar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-4 col-md-6 product-item" data-name="tequeños" data-category="entradas">
+                        <div class="card product-card">
+                            <div class="position-relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1606755456206-b25206c66d1d?w=400&h=250&fit=crop&auto=format" 
+                                     class="product-image" alt="Tequeños">
+                                <span class="badge bg-success product-badge">
+                                    <i class="bi bi-check-circle me-1"></i>Entrada
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="product-title">Tequeños Venezolanos</h5>
+                                </div>
+                                <p class="product-description">
+                                    8 unidades de masa crujiente rellenas de queso blanco, servidos con salsa de ajo.
+                                </p>
+                                <div class="prep-time">
+                                    <i class="bi bi-clock"></i>
+                                    <span>Tiempo: 12-15 min</span>
+                                </div>
+                                <div class="product-footer">
+                                    <h4 class="product-price">$15.000</h4>
+                                    <button class="btn add-to-cart-btn" 
+                                            onclick="addToCart(10, 'Tequeños Venezolanos', 15000, 'https://images.unsplash.com/photo-1606755456206-b25206c66d1d?w=100&h=100&fit=crop')">
+                                        <i class="bi bi-cart-plus"></i>
+                                        <span class="d-none d-md-inline">Agregar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-4 col-md-6 product-item" data-name="nachos" data-category="entradas">
+                        <div class="card product-card">
+                            <div class="position-relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=400&h=250&fit=crop&auto=format" 
+                                     class="product-image" alt="Nachos">
+                                <span class="badge bg-success product-badge">
+                                    <i class="bi bi-check-circle me-1"></i>Entrada
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="product-title">Nachos Supreme</h5>
+                                </div>
+                                <p class="product-description">
+                                    Totopos cubiertos con carne, queso derretido, jalapeños, guacamole y crema agria.
+                                </p>
+                                <div class="prep-time">
+                                    <i class="bi bi-clock"></i>
+                                    <span>Tiempo: 10-12 min</span>
+                                </div>
+                                <div class="product-footer">
+                                    <h4 class="product-price">$18.000</h4>
+                                    <button class="btn add-to-cart-btn" 
+                                            onclick="addToCart(11, 'Nachos Supreme', 18000, 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=100&h=100&fit=crop')">
+                                        <i class="bi bi-cart-plus"></i>
+                                        <span class="d-none d-md-inline">Agregar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Platos Fuertes (8 productos - ya existentes) -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 product-item" data-name="hamburguesa clásica" data-category="platos-fuertes">
+                        <!-- Hamburguesa Clásica (existente) -->
+                        <div class="card product-card">
+                            <div class="position-relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=250&fit=crop&auto=format" 
+                                     class="product-image" alt="Hamburguesa Clásica">
+                                <span class="badge bg-success product-badge">
+                                    <i class="bi bi-check-circle me-1"></i>Popular
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="product-title">Hamburguesa Clásica</h5>
+                                </div>
+                                <p class="product-description">
+                                    Carne 100% res, queso cheddar, lechuga fresca, tomate y nuestra salsa especial de la casa.
+                                </p>
+                                <div class="prep-time">
+                                    <i class="bi bi-clock"></i>
+                                    <span>Tiempo: 15-20 min</span>
+                                </div>
+                                <div class="product-footer">
+                                    <h4 class="product-price">$18.000</h4>
+                                    <button class="btn add-to-cart-btn" 
+                                            onclick="addToCart(1, 'Hamburguesa Clásica', 18000, 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop')">
+                                        <i class="bi bi-cart-plus"></i>
+                                        <span class="d-none d-md-inline">Agregar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bebidas (3 productos) -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 product-item" data-name="jugo natural" data-category="bebidas">
+                        <div class="card product-card">
+                            <div class="position-relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=250&fit=crop&auto=format" 
+                                     class="product-image" alt="Jugo Natural">
+                                <span class="badge bg-info product-badge">
+                                    <i class="bi bi-cup-straw me-1"></i>Bebida
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="product-title">Jugo Natural de Frutas</h5>
+                                </div>
+                                <p class="product-description">
+                                    Jugo fresco de naranja, maracuyá o mango. Sin conservantes ni azúcares añadidos.
+                                </p>
+                                <div class="prep-time">
+                                    <i class="bi bi-clock"></i>
+                                    <span>Tiempo: 5 min</span>
+                                </div>
+                                <div class="product-footer">
+                                    <h4 class="product-price">$8.000</h4>
+                                    <button class="btn add-to-cart-btn" 
+                                            onclick="addToCart(12, 'Jugo Natural de Frutas', 8000, 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=100&h=100&fit=crop')">
+                                        <i class="bi bi-cart-plus"></i>
+                                        <span class="d-none d-md-inline">Agregar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-4 col-md-6 product-item" data-name="limonada" data-category="bebidas">
+                        <div class="card product-card">
+                            <div class="position-relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1621506289937-a8e4d8d3c8fc?w=400&h=250&fit=crop&auto=format" 
+                                     class="product-image" alt="Limonada">
+                                <span class="badge bg-info product-badge">
+                                    <i class="bi bi-cup-straw me-1"></i>Bebida
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="product-title">Limonada de Coco</h5>
+                                </div>
+                                <p class="product-description">
+                                    Limonada refrescante con toque de coco. Perfecta para acompañar cualquier platillo.
+                                </p>
+                                <div class="prep-time">
+                                    <i class="bi bi-clock"></i>
+                                    <span>Tiempo: 3 min</span>
+                                </div>
+                                <div class="product-footer">
+                                    <h4 class="product-price">$7.000</h4>
+                                    <button class="btn add-to-cart-btn" 
+                                            onclick="addToCart(13, 'Limonada de Coco', 7000, 'https://images.unsplash.com/photo-1621506289937-a8e4d8d3c8fc?w=100&h=100&fit=crop')">
+                                        <i class="bi bi-cart-plus"></i>
+                                        <span class="d-none d-md-inline">Agregar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Postres (3 productos) -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 product-item" data-name="tres leches" data-category="postres">
+                        <div class="card product-card">
+                            <div class="position-relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=400&h=250&fit=crop&auto=format" 
+                                     class="product-image" alt="Tres Leches">
+                                <span class="badge bg-warning product-badge">
+                                    <i class="bi bi-heart-fill me-1"></i>Postre
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="product-title">Pastel Tres Leches</h5>
+                                </div>
+                                <p class="product-description">
+                                    Suave bizcocho bañado en tres leches, cubierto con merengue y cerezas.
+                                </p>
+                                <div class="prep-time">
+                                    <i class="bi bi-clock"></i>
+                                    <span>Tiempo: 8-10 min</span>
+                                </div>
+                                <div class="product-footer">
+                                    <h4 class="product-price">$12.000</h4>
+                                    <button class="btn add-to-cart-btn" 
+                                            onclick="addToCart(14, 'Pastel Tres Leches', 12000, 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=100&h=100&fit=crop')">
+                                        <i class="bi bi-cart-plus"></i>
+                                        <span class="d-none d-md-inline">Agregar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Especiales (2 productos) -->
+                    <div class="col-xl-3 col-lg-4 col-md-6 product-item" data-name="plato del chef" data-category="especiales">
+                        <div class="card product-card">
+                            <div class="position-relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=250&fit=crop&auto=format" 
+                                     class="product-image" alt="Plato del Chef">
+                                <span class="badge bg-danger product-badge">
+                                    <i class="bi bi-star-fill me-1"></i>Especial
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="product-title">Especial del Chef</h5>
+                                </div>
+                                <p class="product-description">
+                                    Selección diaria del chef que incluye entrada, plato fuerte y postre sorpresa.
+                                </p>
+                                <div class="prep-time">
+                                    <i class="bi bi-clock"></i>
+                                    <span>Tiempo: 25-30 min</span>
+                                </div>
+                                <div class="product-footer">
+                                    <h4 class="product-price">$45.000</h4>
+                                    <button class="btn add-to-cart-btn" 
+                                            onclick="addToCart(15, 'Especial del Chef', 45000, 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=100&h=100&fit=crop')">
+                                        <i class="bi bi-cart-plus"></i>
+                                        <span class="d-none d-md-inline">Agregar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Secciones específicas (ocultas por defecto) -->
+            <div class="category-section" data-category="entradas" style="display: none;">
+                <h2 class="category-title">
+                    <i class="bi bi-egg-fried me-2"></i>Entradas
+                </h2>
+                <div class="row g-4">
+                    <!-- Entradas se cargarán dinámicamente -->
+                </div>
+            </div>
+
+            <div class="category-section" data-category="platos-fuertes" style="display: none;">
+                <h2 class="category-title">
+                    <i class="bi bi-fire me-2"></i>Platos Fuertes
+                </h2>
+                <div class="row g-4">
+                    <!-- Platos fuertes se cargarán dinámicamente -->
+                </div>
+            </div>
+
+            <div class="category-section" data-category="bebidas" style="display: none;">
+                <h2 class="category-title">
+                    <i class="bi bi-cup-straw me-2"></i>Bebidas
+                </h2>
+                <div class="row g-4">
+                    <!-- Bebidas se cargarán dinámicamente -->
+                </div>
+            </div>
+
+            <div class="category-section" data-category="postres" style="display: none;">
+                <h2 class="category-title">
+                    <i class="bi bi-heart-fill me-2"></i>Postres
+                </h2>
+                <div class="row g-4">
+                    <!-- Postres se cargarán dinámicamente -->
+                </div>
+            </div>
+
+            <div class="category-section" data-category="especiales" style="display: none;">
+                <h2 class="category-title">
+                    <i class="bi bi-star-fill me-2"></i>Especiales
+                </h2>
+                <div class="row g-4">
+                    <!-- Especiales se cargarán dinámicamente -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal para cambiar mesa -->
+    <div class="modal fade" id="tableModal" tabindex="-1" aria-labelledby="tableModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tableModalLabel">
+                        <i class="bi bi-table me-2"></i>Cambiar Número de Mesa
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="newTableNumber" class="form-label">Ingrese el número de su mesa:</label>
+                        <input type="number" 
+                               class="form-control" 
+                               id="newTableNumber" 
+                               min="1" 
+                               max="50" 
+                               value="5"
+                               placeholder="Ej: 4">
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Esto ayudará al personal a servir su pedido en la mesa correcta.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="changeTableNumber()">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón Flotante del Carrito -->
+    <div class="floating-cart-btn">
+        <a href="carrito.html" class="btn btn-primary position-relative">
+            <i class="bi bi-cart3 fs-4"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger floating-cart-badge" 
+                  id="floatingCartBadge">0</span>
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 text-center text-lg-start mb-3 mb-lg-0">
+                    <h5 class="mb-1">
+                        <i class="bi bi-shop me-2"></i>Restaurante SENA
+                    </h5>
+                    <p class="mb-0" style="color: rgba(255,255,255,0.7);">
+                        Sistema de pedidos por QR - Experiencia gastronómica digital
+                    </p>
+                </div>
+                <div class="col-lg-4 text-center text-lg-end">
+                    <a href="index.html" class="btn btn-outline-light btn-sm me-2">
+                        <i class="bi bi-house-door me-1"></i>Inicio
+                    </a>
+                    <a href="carrito.html" class="btn btn-light btn-sm">
+                        <i class="bi bi-cart3 me-1"></i>Ver Carrito
+                    </a>
+                </div>
+            </div>
+            <div class="text-center mt-4 pt-3 border-top border-secondary">
+                <p class="mb-0" style="color: rgba(255,255,255,0.5);">
+                    © 2026 Restaurante SENA - Sistema de Pedidos QR
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript -->
+    <script>
+        // ============================================
+        // GESTIÓN DEL CARRITO (LocalStorage)
+        // ============================================
+        function getCart() {
+            const cart = localStorage.getItem('cart');
+            return cart ? JSON.parse(cart) : [];
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartBadge();
+        }
+
+        function addToCart(id, name, price, image = '') {
+            let cart = getCart();
+            
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: id,
+                    name: name,
+                    price: price,
+                    image: image,
+                    quantity: 1
+                });
+            }
+            
+            saveCart(cart);
+            showNotification(`✅ ${name} agregado al carrito`, 'success');
+        }
+
+        function updateCartBadge() {
+            const cart = getCart();
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            
+            document.querySelectorAll('#cartBadge, #floatingCartBadge').forEach(badge => {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'flex' : 'none';
+            });
+        }
+
+        function showNotification(message, type = 'success') {
+            // Crear notificación toast
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            
+            const bgColor = type === 'success' ? 'bg-success' : 
+                           type === 'error' ? 'bg-danger' : 'bg-info';
+            
+            toast.innerHTML = `
+                <div class="toast align-items-center text-white ${bgColor} border-0 show" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-info-circle'} me-2"></i>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Auto-eliminar después de 3 segundos
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // ============================================
+        // FUNCIONES DEL MENÚ
+        // ============================================
+        
+        // Mostrar modal para cambiar mesa
+        function showTableModal() {
+            const currentTable = localStorage.getItem('tableNumber') || '5';
+            const modal = new bootstrap.Modal(document.getElementById('tableModal'));
+            document.getElementById('newTableNumber').value = currentTable;
+            modal.show();
+        }
+        
+        // Cambiar número de mesa
+        function changeTableNumber() {
+            const newTable = document.getElementById('newTableNumber').value;
+            
+            if (newTable && newTable.trim() !== '' && parseInt(newTable) > 0) {
+                localStorage.setItem('tableNumber', newTable.trim());
+                document.getElementById('tableNumberDisplay').textContent = newTable.trim();
+                
+                // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('tableModal'));
+                modal.hide();
+                
+                showNotification(`✅ Mesa ${newTable} asignada correctamente`, 'success');
+            } else {
+                alert('Por favor ingrese un número de mesa válido (1-50)');
+            }
+        }
+        
+        // Filtrar por categoría - FUNCIONAL
+        function filterCategory(category) {
+            console.log('Filtrando por categoría:', category);
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const activeBtn = document.querySelector(`[onclick="filterCategory('${category}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                console.log('Botón activado:', category);
+            }
+            
+            // Ocultar todas las secciones primero
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Mostrar la sección correspondiente
+            if (category === 'todos') {
+                // Mostrar todos los productos en la sección "todos"
+                document.querySelector('.category-section[data-category="todos"]').style.display = 'block';
+                console.log('Mostrando todos los productos');
+            } else {
+                // Mostrar la sección específica
+                const targetSection = document.querySelector(`.category-section[data-category="${category}"]`);
+                if (targetSection) {
+                    targetSection.style.display = 'block';
+                    console.log('Mostrando categoría:', category);
+                    
+                    // Si la sección está vacía, cargar productos de esa categoría
+                    if (targetSection.querySelector('.row').children.length === 0) {
+                        loadCategoryProducts(category, targetSection);
+                    }
+                }
+            }
+            
+            // También filtrar en la vista de "todos"
+            filterProductsInAllView(category);
+        }
+        
+        // Filtrar productos dentro de la vista "todos"
+        function filterProductsInAllView(category) {
+            const allProducts = document.querySelectorAll('.product-item');
+            
+            allProducts.forEach(product => {
+                if (category === 'todos') {
+                    product.style.display = 'block';
+                    product.style.opacity = '1';
+                } else {
+                    const productCategory = product.getAttribute('data-category');
+                    if (productCategory === category) {
+                        product.style.display = 'block';
+                        product.style.opacity = '1';
+                    } else {
+                        product.style.display = 'none';
+                        product.style.opacity = '0.5';
+                    }
+                }
+            });
+        }
+        
+        // Cargar productos por categoría (dinámico)
+        function loadCategoryProducts(category, section) {
+            // Obtener todos los productos de esta categoría
+            const allProducts = document.querySelectorAll(`.product-item[data-category="${category}"]`);
+            const row = section.querySelector('.row');
+            
+            // Limpiar fila existente
+            row.innerHTML = '';
+            
+            // Clonar y añadir productos a la sección específica
+            allProducts.forEach(product => {
+                const clone = product.cloneNode(true);
+                row.appendChild(clone);
+            });
+            
+            console.log(`Cargados ${allProducts.length} productos en ${category}`);
+        }
+        
+        // Buscar productos
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const products = document.querySelectorAll('.product-item');
+            let foundCount = 0;
+            
+            products.forEach(product => {
+                const productName = product.dataset.name.toLowerCase();
+                const productCard = product.closest('.product-card');
+                
+                if (searchTerm === '' || productName.includes(searchTerm)) {
+                    product.style.display = 'block';
+                    productCard.style.opacity = '1';
+                    productCard.style.animation = 'fadeIn 0.3s ease';
+                    foundCount++;
+                } else {
+                    product.style.display = 'none';
+                    productCard.style.opacity = '0.3';
+                }
+            });
+            
+            // Feedback visual
+            if (searchTerm !== '' && foundCount === 0) {
+                document.getElementById('searchInput').style.borderColor = '#dc3545';
+                document.getElementById('searchInput').style.boxShadow = '0 0 0 3px rgba(220, 53, 69, 0.1)';
+            } else {
+                document.getElementById('searchInput').style.borderColor = '';
+                document.getElementById('searchInput').style.boxShadow = '';
+            }
+        }
+        
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar badge del carrito
+            updateCartBadge();
+            
+            // Inicializar número de mesa
+            const tableNumber = localStorage.getItem('tableNumber') || '5';
+            document.getElementById('tableNumberDisplay').textContent = tableNumber;
+            
+            // Inicializar filtro
+            filterCategory('todos');
+            
+            // Agregar animación de entrada a las tarjetas
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+            
+            // Configurar evento para buscar al presionar Enter
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchProducts();
+                }
+            });
+            
+            // Cargar productos en cada categoría al iniciar
+            const categories = ['entradas', 'platos-fuertes', 'bebidas', 'postres', 'especiales'];
+            categories.forEach(category => {
+                const section = document.querySelector(`.category-section[data-category="${category}"]`);
+                if (section) {
+                    loadCategoryProducts(category, section);
+                }
+            });
+            
+            console.log('Menú cargado correctamente. Productos disponibles: ' + 
+                document.querySelectorAll('.product-item').length);
+        });
+    </script>
+</body>
+</html>
